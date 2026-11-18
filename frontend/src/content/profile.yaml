@@ -1,0 +1,14 @@
+# Site owner identity. Validated by the `profile` schema in src/content.config.ts.
+# TODO(content): replace every placeholder value below with real information.
+main:
+  name: Your Name
+  jobTitle: Software Engineer
+  location: City, Country
+  pitch: >-
+    TODO(content) One or two sentences about what you build and what you care about.
+  description: >-
+    TODO(content) Portfolio of a software engineer: projects, CV and contact. Replace with
+    a 50 to 160 character description.
+  links:
+    github: https://github.com/your-username
+    linkedin: https://www.linkedin.com/in/your-username

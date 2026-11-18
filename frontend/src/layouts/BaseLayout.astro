@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+
+import { Font } from 'astro:assets';
+
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Seo from '../components/Seo.astro';
+import { getProfile } from '../lib/content';
+import { THEME_STORAGE_KEY } from '../lib/theme';
+
+interface Props {
+  /** Page title; omitted on the home page, which uses the site name alone. */
+  title?: string;
+  /** Meta description; defaults to the profile description. */
+  description?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  noindex?: boolean;
+}
+
+const { title, description, ogType, noindex } = Astro.props;
+const profile = await getProfile();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      Runs before first paint to avoid a flash of the wrong theme. Must stay inline and
+      tiny; the full logic lives in src/scripts/theme-toggle.ts.
+    -->
+    <script is:inline define:vars={{ storageKey: THEME_STORAGE_KEY }}>
+      try {
+        const stored = localStorage.getItem(storageKey);
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme =
+          stored === 'light' || stored === 'dark' ? stored : systemDark ? 'dark' : 'light';
+      } catch {
+        // Storage unavailable: CSS follows the system preference on its own.
+      }
+    </script>
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-jetbrains-mono" />
+    <Seo
+      siteName={profile.name}
+      description={description ?? profile.description}
+      title={title}
+      ogType={ogType}
+      noindex={noindex}
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d0f12" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body class="flex flex-col">
+    <a
+      href="#main"
+      class="sr-only z-50 rounded-md bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      Skip to content
+    </a>
+    <Header siteName={profile.name} />
+    <main
+      id="main"
+      tabindex="-1"
+      class="mx-auto w-full max-w-(--container-content) flex-1 px-4 sm:px-6"
+    >
+      <slot />
+    </main>
+    <Footer siteName={profile.name} links={profile.links} />
+  </body>
+</html>

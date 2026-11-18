@@ -1,0 +1,26 @@
+---
+import ButtonLink from '../components/ButtonLink.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getProfile } from '../lib/content';
+
+const profile = await getProfile();
+---
+
+<BaseLayout>
+  <section class="py-20 sm:py-28" aria-labelledby="hero-title">
+    <p class="font-mono text-sm text-accent">
+      <span aria-hidden="true">$ </span>whoami
+    </p>
+    <h1 id="hero-title" class="mt-4 text-5xl font-bold tracking-tight text-balance sm:text-7xl">
+      {profile.name}
+    </h1>
+    <p class="mt-4 text-xl text-muted sm:text-2xl">{profile.jobTitle}</p>
+    <p class="mt-6 max-w-(--container-prose) text-lg">{profile.pitch}</p>
+    <div class="mt-10 flex flex-wrap gap-3">
+      <ButtonLink href="/projects">View projects</ButtonLink>
+      <ButtonLink href="/contact" variant="secondary">
+        Get in touch
+      </ButtonLink>
+    </div>
+  </section>
+</BaseLayout>

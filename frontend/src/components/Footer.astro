@@ -1,0 +1,40 @@
+---
+interface Props {
+  siteName: string;
+  links: {
+    github: string;
+    linkedin: string;
+    sourceRepository?: string | undefined;
+  };
+}
+
+const { siteName, links } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-border">
+  <div class="mx-auto flex max-w-(--container-content) flex-col gap-4 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+    <p class="font-mono">
+      &copy; {year} {siteName}
+    </p>
+    <ul class="flex flex-wrap gap-x-6 gap-y-2 font-mono">
+      <li>
+        <a class="hover:text-accent" href={links.github} rel="me">
+          GitHub
+        </a>
+      </li>
+      <li>
+        <a class="hover:text-accent" href={links.linkedin} rel="me">
+          LinkedIn
+        </a>
+      </li>
+      {links.sourceRepository && (
+        <li>
+          <a class="hover:text-accent" href={links.sourceRepository}>
+            Source of this site
+          </a>
+        </li>
+      )}
+    </ul>
+  </div>
+</footer>

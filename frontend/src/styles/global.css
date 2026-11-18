@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+
+/* `dark:` targets the resolved theme set on <html> by the inline script in BaseLayout. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/*
+ * Design tokens. Every colour is defined once with `light-dark()`, resolved from
+ * `color-scheme`: the system preference by default (also without JavaScript), or the
+ * explicit choice stored by the theme toggle. All text/background pairs meet WCAG AA.
+ */
+:root {
+  color-scheme: light dark;
+
+  --bg: light-dark(#faf9f6, #0d0f12);
+  --surface: light-dark(#ffffff, #14171c);
+  --surface-muted: light-dark(#f1efe9, #1b1f26);
+  --fg: light-dark(#15171c, #e9e7e2);
+  --fg-muted: light-dark(#4a5060, #a4a9b5);
+  --border: light-dark(#dcd8ce, #2c313a);
+  --accent: light-dark(#a24a06, #f4b13f);
+  --accent-strong: light-dark(#7f3a05, #f8c66d);
+  --on-accent: light-dark(#ffffff, #16120a);
+  --success: light-dark(#166534, #4ade80);
+  --danger: light-dark(#b42318, #fca5a5);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'Cascadia Code', monospace;
+}
+
+@theme {
+  --radius-card: 0.75rem;
+  --container-content: 72rem;
+  --container-prose: 44rem;
+}
+
+@layer base {
+  html {
+    @apply bg-bg text-fg antialiased;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply min-h-dvh font-sans leading-relaxed;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+
+  ::selection {
+    @apply bg-accent text-on-accent;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer components {
+  /* Long-form text rendered from Markdown (project pages). */
+  .prose-content {
+    @apply max-w-(--container-prose) text-fg;
+
+    & :where(h2) {
+      @apply mt-10 mb-4 text-2xl font-semibold tracking-tight;
+    }
+    & :where(h3) {
+      @apply mt-8 mb-3 text-xl font-semibold;
+    }
+    & :where(p, ul, ol, blockquote, pre) {
+      @apply my-4;
+    }
+    & :where(ul) {
+      @apply list-disc pl-6;
+    }
+    & :where(ol) {
+      @apply list-decimal pl-6;
+    }
+    & :where(a) {
+      @apply text-accent underline underline-offset-4 hover:text-accent-strong;
+    }
+    & :where(code) {
+      @apply rounded bg-surface-muted px-1.5 py-0.5 font-mono text-[0.9em];
+    }
+    & :where(pre) {
+      @apply overflow-x-auto rounded-(--radius-card) border border-border bg-surface-muted p-4;
+    }
+    & :where(pre code) {
+      @apply bg-transparent p-0;
+    }
+    & :where(blockquote) {
+      @apply border-l-2 border-accent pl-4 text-muted italic;
+    }
+  }
+}

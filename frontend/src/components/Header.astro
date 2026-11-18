@@ -1,0 +1,64 @@
+---
+import NavLinks from './NavLinks.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  siteName: string;
+}
+
+const { siteName } = Astro.props;
+---
+
+<header class="sticky top-0 z-40 border-b border-border bg-bg/85 backdrop-blur">
+  <div class="mx-auto flex h-16 max-w-(--container-content) items-center justify-between px-4 sm:px-6">
+    <a href="/" class="group flex items-center gap-2 font-mono text-sm font-semibold">
+      <span aria-hidden="true" class="text-accent">
+        ~/
+      </span>
+      <span class="group-hover:text-accent">{siteName}</span>
+    </a>
+
+    <div class="flex items-center gap-1">
+      <nav aria-label="Main" class="hidden md:block">
+        <NavLinks layout="row" />
+      </nav>
+
+      <ThemeToggle />
+
+      <!-- Mobile menu: a native disclosure, works without JavaScript. -->
+      <details class="group relative md:hidden">
+        <summary class="flex size-10 cursor-pointer list-none items-center justify-center rounded-full text-muted hover:bg-surface-muted hover:text-fg [&::-webkit-details-marker]:hidden">
+          <span class="sr-only">Menu</span>
+          <svg
+            class="size-5 group-open:hidden"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+          <svg
+            class="hidden size-5 group-open:block"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </summary>
+        <nav
+          aria-label="Main"
+          class="absolute right-0 mt-2 w-56 rounded-(--radius-card) border border-border bg-surface p-2 shadow-lg"
+        >
+          <NavLinks layout="column" />
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>

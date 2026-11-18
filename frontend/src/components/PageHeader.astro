@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string;
+  /** Terminal-style breadcrumb shown above the title, e.g. `~/projects`. */
+  path: string;
+  lead?: string | undefined;
+}
+
+const { title, path, lead } = Astro.props;
+---
+
+<header class="pt-12 pb-10 sm:pt-16">
+  <p class="font-mono text-sm text-accent">
+    <span aria-hidden="true">$ cd </span>
+    {path}
+  </p>
+  <h1 class="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl">{title}</h1>
+  {lead && <p class="mt-4 max-w-(--container-prose) text-lg text-muted">{lead}</p>}
+  <slot />
+</header>

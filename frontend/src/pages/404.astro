@@ -1,0 +1,23 @@
+---
+import ButtonLink from '../components/ButtonLink.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" noindex>
+  <PageHeader
+    title="404: page not found"
+    path="~/nowhere"
+    lead="This page does not exist or has moved. Check the address, or start again from the home page."
+  />
+  <pre
+    class="max-w-(--container-prose) overflow-x-auto rounded-(--radius-card) border border-border bg-surface-muted p-4 font-mono text-sm text-muted"
+    aria-hidden="true"
+  >bash: cd: no such file or directory</pre>
+  <div class="mt-8 flex flex-wrap gap-3">
+    <ButtonLink href="/">Back to home</ButtonLink>
+    <ButtonLink href="/projects" variant="secondary">
+      Browse projects
+    </ButtonLink>
+  </div>
+</BaseLayout>
