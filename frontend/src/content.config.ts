@@ -1,27 +1,24 @@
 import { defineCollection } from 'astro:content';
-import { file } from 'astro/loaders';
-import { z } from 'astro/zod';
+import { file, glob } from 'astro/loaders';
 
-/**
- * Site owner identity, used by the layout, SEO and pages.
- * Single entry with id `main` in `src/content/profile.yaml`.
- */
+import { cvSchema, profileSchema, projectSchema } from './lib/schemas';
+
+/** Site owner identity: single entry `main` in `src/content/profile.yaml`. */
 const profile = defineCollection({
   loader: file('src/content/profile.yaml'),
-  schema: z.object({
-    name: z.string().min(1),
-    jobTitle: z.string().min(1),
-    location: z.string().min(1),
-    pitch: z.string().min(1),
-    /** Default meta description for pages that do not define their own. */
-    description: z.string().min(50).max(160),
-    links: z.object({
-      github: z.url(),
-      linkedin: z.url(),
-      /** Source code of this website, shown in the footer. */
-      sourceRepository: z.url().optional(),
-    }),
-  }),
+  schema: ({ image }) => profileSchema(image),
 });
 
-export const collections = { profile };
+/** One Markdown file per project; the file name is the URL slug. */
+const projects = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
+  schema: ({ image }) => projectSchema(image),
+});
+
+/** Structured CV: single entry `main` in `src/content/cv.yaml`. */
+const cv = defineCollection({
+  loader: file('src/content/cv.yaml'),
+  schema: cvSchema,
+});
+
+export const collections = { profile, projects, cv };

@@ -5,8 +5,9 @@ const PAGES = [
   { path: '/', heading: /.+/ },
   { path: '/projects', heading: 'Projects' },
   { path: '/about', heading: 'About' },
-  { path: '/cv', heading: /CV|Curriculum/ },
+  { path: '/cv', heading: 'Curriculum vitae' },
   { path: '/contact', heading: 'Contact' },
+  { path: '/projects/example-project-a', heading: /.+/ },
 ] as const;
 
 test.describe('every page', () => {

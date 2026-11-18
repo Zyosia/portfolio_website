@@ -1,8 +1,55 @@
 ---
+import { Image } from 'astro:assets';
+
+import ButtonLink from '../components/ButtonLink.astro';
 import PageHeader from '../components/PageHeader.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import SkillGroups from '../components/SkillGroups.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCv, getProfile } from '../lib/content';
+
+const [profile, cv] = await Promise.all([getProfile(), getCv()]);
 ---
 
-<BaseLayout title="About">
-  <PageHeader title="About" path="~/about" lead="Coming soon." />
+<BaseLayout title="About" ogType="profile">
+  <PageHeader title="About" path="~/about" />
+
+  <div class="grid items-start gap-10 md:grid-cols-[16rem_1fr] lg:gap-16">
+    <Image
+      src={profile.photo}
+      alt={profile.photoAlt}
+      widths={[256, 512]}
+      sizes="16rem"
+      loading="eager"
+      class="aspect-square w-48 rounded-(--radius-card) border border-border object-cover md:w-64"
+    />
+    <div class="max-w-(--container-prose) space-y-4 text-lg">
+      {profile.bio.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+      <div class="flex flex-wrap gap-3 pt-4">
+        <ButtonLink href="/cv">Read my CV</ButtonLink>
+        <ButtonLink href="/contact" variant="secondary">
+          Contact me
+        </ButtonLink>
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-20" aria-labelledby="interests-title">
+    <SectionHeading index="01" title="Interests" id="interests-title" />
+    <ul class="grid gap-4 md:grid-cols-3">
+      {profile.interests.map((interest) => (
+        <li class="rounded-(--radius-card) border border-border bg-surface p-6">
+          <h3 class="font-semibold">{interest.title}</h3>
+          <p class="mt-2 text-sm text-muted">{interest.description}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mt-16" aria-labelledby="skills-title">
+    <SectionHeading index="02" title="Skills" id="skills-title" />
+    <SkillGroups groups={cv.skills} />
+  </section>
 </BaseLayout>

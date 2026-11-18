@@ -1,0 +1,44 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+import { formatMonthYear } from '../lib/projects';
+import TagList from './TagList.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  /** Heading level depends on the surrounding page outline. */
+  headingLevel?: 'h2' | 'h3';
+  /** Eager-load the cover of cards visible on first paint. */
+  eager?: boolean;
+}
+
+const { project, headingLevel: Heading = 'h3', eager = false } = Astro.props;
+const { title, summary, date, tags, cover, coverAlt, draft } = project.data;
+const href = `/projects/${project.id}`;
+---
+
+<article class="group relative flex h-full flex-col overflow-hidden rounded-(--radius-card) border border-border bg-surface transition-colors focus-within:border-accent hover:border-accent">
+  <Image
+    src={cover}
+    alt={coverAlt}
+    widths={[400, 800]}
+    sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 100vw"
+    class="aspect-video w-full border-b border-border object-cover"
+    loading={eager ? 'eager' : 'lazy'}
+  />
+  <div class="flex flex-1 flex-col gap-3 p-5">
+    <p class="font-mono text-xs text-muted">
+      <time datetime={date.toISOString()}>{formatMonthYear(date)}</time>
+      {draft && <span class="ml-2 text-danger">draft</span>}
+    </p>
+    <Heading class="text-lg leading-snug font-semibold">
+      <!-- Stretched link: the whole card is clickable, but only the title is announced. -->
+      <a href={href} class="after:absolute after:inset-0 group-hover:text-accent">
+        {title}
+      </a>
+    </Heading>
+    <p class="flex-1 text-sm text-muted">{summary}</p>
+    <TagList tags={tags} label={`Tags of ${title}`} />
+  </div>
+</article>

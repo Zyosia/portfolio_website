@@ -80,6 +80,30 @@
   }
 }
 
+/* Print (mainly the CV page): light theme, no chrome, content only. */
+@media print {
+  :root,
+  :root[data-theme] {
+    color-scheme: light;
+  }
+
+  html {
+    font-size: 11pt;
+  }
+
+  body > header,
+  body > footer,
+  body > a[href='#main'] {
+    display: none;
+  }
+
+  main a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: var(--fg-muted);
+  }
+}
+
 @layer components {
   /* Long-form text rendered from Markdown (project pages). */
   .prose-content {

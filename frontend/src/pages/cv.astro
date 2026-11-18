@@ -1,8 +1,123 @@
 ---
+import ButtonLink from '../components/ButtonLink.astro';
 import PageHeader from '../components/PageHeader.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import SkillGroups from '../components/SkillGroups.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCv, getProfile } from '../lib/content';
+import { formatPeriod, formatYearMonth, sortByPeriodDesc } from '../lib/cv';
+
+const [profile, cv] = await Promise.all([getProfile(), getCv()]);
+const experience = sortByPeriodDesc(cv.experience);
+const education = sortByPeriodDesc(cv.education);
 ---
 
-<BaseLayout title="CV">
-  <PageHeader title="CV" path="~/cv" lead="Coming soon." />
+<BaseLayout
+  title="CV"
+  description={`Curriculum vitae of ${profile.name}: experience, education, skills, languages and certifications.`}
+>
+  <PageHeader
+    title="Curriculum vitae"
+    path="~/cv"
+    lead={`${profile.jobTitle} · ${profile.location}`}
+  >
+    <div class="mt-8 flex flex-wrap gap-3 print:hidden">
+      <ButtonLink href="/cv.pdf" download>
+        Download PDF
+      </ButtonLink>
+    </div>
+  </PageHeader>
+
+  <div class="space-y-16">
+    <section aria-labelledby="experience-title">
+      <SectionHeading index="01" title="Experience" id="experience-title" />
+      <ol class="space-y-10">
+        {experience.map((job) => (
+          <li class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
+            <p class="font-mono text-sm text-muted">{formatPeriod(job.start, job.end)}</p>
+            <div>
+              <h3 class="text-lg font-semibold">
+                {job.role} <span class="text-muted">· {job.organization}</span>
+              </h3>
+              {job.location && <p class="text-sm text-muted">{job.location}</p>}
+              {job.highlights.length > 0 && (
+                <ul class="mt-3 list-disc space-y-1 pl-5">
+                  {job.highlights.map((highlight) => (
+                    <li>{highlight}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section aria-labelledby="education-title">
+      <SectionHeading index="02" title="Education" id="education-title" />
+      <ol class="space-y-10">
+        {education.map((school) => (
+          <li class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
+            <p class="font-mono text-sm text-muted">{formatPeriod(school.start, school.end)}</p>
+            <div>
+              <h3 class="text-lg font-semibold">
+                {school.degree} <span class="text-muted">· {school.institution}</span>
+              </h3>
+              {school.location && <p class="text-sm text-muted">{school.location}</p>}
+              {school.details.length > 0 && (
+                <ul class="mt-3 list-disc space-y-1 pl-5">
+                  {school.details.map((detail) => (
+                    <li>{detail}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section aria-labelledby="cv-skills-title">
+      <SectionHeading index="03" title="Skills" id="cv-skills-title" />
+      <SkillGroups groups={cv.skills} />
+    </section>
+
+    <div class="grid gap-16 md:grid-cols-2">
+      <section aria-labelledby="languages-title">
+        <SectionHeading index="04" title="Languages" id="languages-title" />
+        <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
+          {cv.languages.map((language) => (
+            <>
+              <dt class="font-semibold">{language.name}</dt>
+              <dd class="text-muted">{language.level}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+
+      {cv.certifications.length > 0 && (
+        <section aria-labelledby="certifications-title">
+          <SectionHeading index="05" title="Certifications" id="certifications-title" />
+          <ul class="space-y-3">
+            {cv.certifications.map((certification) => (
+              <li>
+                <p class="font-semibold">
+                  {certification.url ? (
+                    <a href={certification.url} class="hover:text-accent">
+                      {certification.name}
+                    </a>
+                  ) : (
+                    certification.name
+                  )}
+                </p>
+                <p class="text-sm text-muted">
+                  {certification.issuer} · {formatYearMonth(certification.date)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  </div>
 </BaseLayout>

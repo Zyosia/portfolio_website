@@ -1,8 +1,37 @@
 ---
 import PageHeader from '../../components/PageHeader.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import ProjectFilter from '../../components/ProjectFilter.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects } from '../../lib/content';
+import { collectTags, tagSlug } from '../../lib/projects';
+
+const projects = await getProjects();
+const tags = collectTags(projects);
 ---
 
-<BaseLayout title="Projects">
-  <PageHeader title="Projects" path="~/projects" lead="Coming soon." />
+<BaseLayout
+  title="Projects"
+  description="Selected software, AI and DevOps projects, with the context, the technical choices and the results."
+>
+  <PageHeader
+    title="Projects"
+    path="~/projects"
+    lead="A selection of things I have built, with the context, the technical choices and what I learned."
+  />
+
+  {projects.length === 0 ? (
+    <p class="text-muted">No projects published yet.</p>
+  ) : (
+    <>
+      <ProjectFilter tags={tags} total={projects.length} />
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((project, index) => (
+          <li data-project-tags={project.data.tags.map(tagSlug).join(' ')}>
+            <ProjectCard project={project} headingLevel="h2" eager={index < 3} />
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
 </BaseLayout>

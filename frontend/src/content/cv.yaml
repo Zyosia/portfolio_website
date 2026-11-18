@@ -1,0 +1,32 @@
+# Structured CV. Validated by `cvSchema` in src/lib/schemas.ts.
+# Dates use the YYYY-MM format; omit `end` for a current position.
+# The skills below are also shown on the home and about pages.
+# TODO(content): replace every entry with real information, and public/cv.pdf with the real PDF.
+main:
+  experience:
+    - role: TODO(content) Job title
+      organization: TODO(content) Company
+      location: City, Country
+      start: '2025-01'
+      highlights:
+        - TODO(content) A concrete achievement, ideally with a measurable result.
+        - TODO(content) Another responsibility or achievement.
+  education:
+    - degree: TODO(content) Engineering degree, major
+      institution: TODO(content) School
+      location: City, Country
+      start: '2021-09'
+      end: '2026-06'
+      details:
+        - TODO(content) Relevant courses, final-year project or distinction.
+  skills:
+    - category: Software development
+      items: [TODO(content) Language, TODO(content) Framework]
+    - category: AI
+      items: [TODO(content) Library or technique]
+    - category: DevOps
+      items: [TODO(content) Tool, TODO(content) Platform]
+  languages:
+    - name: TODO(content) Language
+      level: TODO(content) Level
+  certifications: []

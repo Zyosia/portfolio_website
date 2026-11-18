@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <rect width="800" height="800" fill="#1b1f26"/>
+  <circle cx="400" cy="320" r="140" fill="#2c313a"/>
+  <path d="M160 760c0-150 108-250 240-250s240 100 240 250z" fill="#2c313a"/>
+  <text x="400" y="420" font-family="monospace" font-size="40" fill="#f4b13f" text-anchor="middle" dy="320">TODO(content) photo</text>
+</svg>

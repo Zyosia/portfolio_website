@@ -1,12 +1,17 @@
 ---
 import ButtonLink from '../components/ButtonLink.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import SkillGroups from '../components/SkillGroups.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getProfile } from '../lib/content';
+import { getCv, getProfile, getProjects } from '../lib/content';
+import { selectFeatured } from '../lib/projects';
 
-const profile = await getProfile();
+const [profile, cv, projects] = await Promise.all([getProfile(), getCv(), getProjects()]);
+const featured = selectFeatured(projects, 3);
 ---
 
-<BaseLayout>
+<BaseLayout ogType="profile">
   <section class="py-20 sm:py-28" aria-labelledby="hero-title">
     <p class="font-mono text-sm text-accent">
       <span aria-hidden="true">$ </span>whoami
@@ -14,13 +19,52 @@ const profile = await getProfile();
     <h1 id="hero-title" class="mt-4 text-5xl font-bold tracking-tight text-balance sm:text-7xl">
       {profile.name}
     </h1>
-    <p class="mt-4 text-xl text-muted sm:text-2xl">{profile.jobTitle}</p>
+    <p class="mt-4 text-xl text-muted sm:text-2xl">
+      {profile.jobTitle}
+      <span class="font-mono text-base"> @ {profile.location}</span>
+    </p>
     <p class="mt-6 max-w-(--container-prose) text-lg">{profile.pitch}</p>
     <div class="mt-10 flex flex-wrap gap-3">
       <ButtonLink href="/projects">View projects</ButtonLink>
       <ButtonLink href="/contact" variant="secondary">
         Get in touch
       </ButtonLink>
+    </div>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="py-12" aria-labelledby="featured-title">
+      <SectionHeading index="01" title="Featured projects" id="featured-title">
+        <a href="/projects" class="font-mono text-sm text-muted hover:text-accent">
+          all projects <span aria-hidden="true">→</span>
+        </a>
+      </SectionHeading>
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {featured.map((project, index) => (
+          <li>
+            <ProjectCard project={project} eager={index === 0} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="py-12" aria-labelledby="skills-title">
+    <SectionHeading index="02" title="Skills" id="skills-title">
+      <a href="/cv" class="font-mono text-sm text-muted hover:text-accent">
+        full CV <span aria-hidden="true">→</span>
+      </a>
+    </SectionHeading>
+    <SkillGroups groups={cv.skills} />
+  </section>
+
+  <section class="py-12" aria-labelledby="contact-title">
+    <SectionHeading index="03" title="Let's talk" id="contact-title" />
+    <div class="flex flex-col items-start gap-6 rounded-(--radius-card) border border-border bg-surface p-8 sm:flex-row sm:items-center sm:justify-between">
+      <p class="max-w-(--container-prose) text-lg">
+        Have a project, a role or a question in mind? I read every message.
+      </p>
+      <ButtonLink href="/contact">Contact me</ButtonLink>
     </div>
   </section>
 </BaseLayout>

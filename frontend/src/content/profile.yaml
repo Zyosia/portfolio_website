@@ -1,4 +1,4 @@
-# Site owner identity. Validated by the `profile` schema in src/content.config.ts.
+# Site owner identity. Validated by `profileSchema` in src/lib/schemas.ts.
 # TODO(content): replace every placeholder value below with real information.
 main:
   name: Your Name
@@ -9,6 +9,23 @@ main:
   description: >-
     TODO(content) Portfolio of a software engineer: projects, CV and contact. Replace with
     a 50 to 160 character description.
+  # TODO(content): replace with a real photo (JPG/PNG/WebP, square, at least 800x800).
+  photo: ../assets/profile-placeholder.svg
+  photoAlt: TODO(content) Portrait of Your Name
+  bio:
+    - >-
+      TODO(content) First paragraph: who you are, where you are in your career and what you
+      are looking for.
+    - >-
+      TODO(content) Second paragraph: how you work, what you have learned recently, what
+      drives you.
+  interests:
+    - title: Software development
+      description: TODO(content) What you enjoy building and the practices you care about.
+    - title: Artificial intelligence
+      description: TODO(content) Which AI topics you explore and how you apply them.
+    - title: DevOps
+      description: TODO(content) How you approach automation, infrastructure and delivery.
   links:
     github: https://github.com/your-username
     linkedin: https://www.linkedin.com/in/your-username
