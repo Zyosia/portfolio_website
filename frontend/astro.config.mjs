@@ -12,6 +12,8 @@ export default defineConfig({
   // `/about` is emitted as `about.html` and served without a trailing slash by Caddy.
   trailingSlash: 'never',
   build: { format: 'file' },
+  // Prism emits CSS classes; Shiki's inline styles would be blocked by the CSP below.
+  markdown: { syntaxHighlight: 'prism' },
   security: {
     // Astro emits a per-page <meta> CSP with hashes for its own scripts and styles.
     // Headers that cannot live in a <meta> tag (frame-ancestors, HSTS...) are set by Caddy.

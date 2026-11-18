@@ -136,6 +136,19 @@
     & :where(pre code) {
       @apply bg-transparent p-0;
     }
+    /* Prism tokens (Markdown code blocks), coloured with the theme tokens. */
+    & :where(.token.comment, .token.prolog, .token.doctype) {
+      @apply text-muted italic;
+    }
+    & :where(.token.keyword, .token.boolean, .token.important) {
+      @apply text-accent;
+    }
+    & :where(.token.string, .token.attr-value, .token.char) {
+      @apply text-success;
+    }
+    & :where(.token.number, .token.function, .token.class-name) {
+      @apply text-accent-strong;
+    }
     & :where(blockquote) {
       @apply border-l-2 border-accent pl-4 text-muted italic;
     }
