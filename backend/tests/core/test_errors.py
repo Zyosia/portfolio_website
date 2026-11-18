@@ -4,7 +4,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app.core.errors import AppError, EmailDeliveryError, register_error_handlers
+from app.core.errors import AppError, EmailDeliveryError, _expect, register_error_handlers
 
 
 class TeapotError(AppError):
@@ -72,6 +72,11 @@ def test_wrong_method_uses_the_standard_shape(client: TestClient) -> None:
 
     assert response.status_code == 405
     assert response.json()["error"]["code"] == "method_not_allowed"
+
+
+def test_expect_rejects_a_mismatched_exception() -> None:
+    with pytest.raises(TypeError, match="expected AppError, got ValueError"):
+        _expect(ValueError(), AppError)
 
 
 def test_validation_errors_name_the_invalid_fields(client: TestClient) -> None:

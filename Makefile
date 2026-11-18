@@ -11,9 +11,11 @@ BACKEND := backend
 COMPOSE := docker compose
 COMPOSE_DEV := $(COMPOSE) -f compose.yaml -f compose.dev.yaml
 HADOLINT_IMAGE := hadolint/hadolint:v2.15.1
+TRIVY_IMAGE := aquasec/trivy:0.76.2
 DOCKERFILES := $(FRONTEND)/Dockerfile $(BACKEND)/Dockerfile
+IMAGES := portfolio-web:local portfolio-api:local
 
-.PHONY: help install dev lint format typecheck test e2e build up down logs clean
+.PHONY: help install dev lint format typecheck test e2e build scan up down logs clean
 
 help: ## List available targets
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -39,7 +41,7 @@ format: ## Auto-format frontend and backend code
 
 typecheck: ## astro check + mypy --strict
 	cd $(FRONTEND) && pnpm typecheck
-	cd $(BACKEND) && uv run mypy app
+	cd $(BACKEND) && uv run mypy
 
 test: ## Vitest + pytest (with coverage)
 	cd $(FRONTEND) && pnpm test
@@ -51,6 +53,16 @@ e2e: ## Playwright end-to-end and accessibility tests
 build: ## Build the frontend and both Docker images
 	cd $(FRONTEND) && pnpm build
 	$(COMPOSE) build
+
+# MSYS_NO_PATHCONV stops Git Bash on Windows from rewriting the container paths.
+scan: ## Trivy scan of the local images (fails on fixable HIGH/CRITICAL)
+	@for image in $(IMAGES); do \
+		echo "trivy $$image"; \
+		MSYS_NO_PATHCONV=1 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+			-v "$(CURDIR)/.trivyignore.yaml:/ignore.yaml:ro" $(TRIVY_IMAGE) image --quiet \
+			--scanners vuln --severity HIGH,CRITICAL --ignore-unfixed --ignorefile /ignore.yaml \
+			--exit-code 1 "$$image"; \
+	done
 
 up: ## Run the production-like stack locally (https://localhost)
 	$(COMPOSE) up -d --build

@@ -1,7 +1,7 @@
 ---
 # TODO(content): replace this example with a real project. The file name is the URL slug.
 title: TODO(content) Example project B
-summary: TODO(content) One or two sentences explaining what the project does and why it matters.
+summary: TODO(content) Second example. Explain what the project does, for whom, and why it matters.
 date: 2025-11-01
 tags: [AI, Python]
 techStack: [TODO(content) Tech 1, TODO(content) Tech 2, TODO(content) Tech 3]

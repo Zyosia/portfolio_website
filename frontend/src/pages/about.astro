@@ -11,7 +11,11 @@ import { getCv, getProfile } from '../lib/content';
 const [profile, cv] = await Promise.all([getProfile(), getCv()]);
 ---
 
-<BaseLayout title="About" ogType="profile">
+<BaseLayout
+  title="About"
+  description={`About ${profile.name}: background, interests in software, AI and DevOps, and skills.`}
+  ogType="profile"
+>
   <PageHeader title="About" path="~/about" />
 
   <div class="grid items-start gap-10 md:grid-cols-[16rem_1fr] lg:gap-16">

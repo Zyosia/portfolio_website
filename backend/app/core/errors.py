@@ -62,8 +62,15 @@ def _http_status_code(status: int) -> str:
         return "http_error"
 
 
-async def _handle_app_error(_request: Request, exc: Exception) -> JSONResponse:
-    assert isinstance(exc, AppError)  # noqa: S101 - guaranteed by the registration below
+def _expect[E: Exception](exc: Exception, kind: type[E]) -> E:
+    """Narrows the generic handler argument; Starlette only calls a handler for its type."""
+    if not isinstance(exc, kind):
+        raise TypeError(f"expected {kind.__name__}, got {type(exc).__name__}") from exc
+    return exc
+
+
+async def _handle_app_error(_request: Request, error: Exception) -> JSONResponse:
+    exc = _expect(error, AppError)
     return JSONResponse(
         status_code=exc.status_code,
         content=error_body(exc.code, exc.message),
@@ -71,8 +78,8 @@ async def _handle_app_error(_request: Request, exc: Exception) -> JSONResponse:
     )
 
 
-async def _handle_validation_error(_request: Request, exc: Exception) -> JSONResponse:
-    assert isinstance(exc, RequestValidationError)  # noqa: S101
+async def _handle_validation_error(_request: Request, error: Exception) -> JSONResponse:
+    exc = _expect(error, RequestValidationError)
     fields = sorted({".".join(str(p) for p in err["loc"][1:]) for err in exc.errors()} - {""})
     message = "Invalid request." + (f" Check: {', '.join(fields)}." if fields else "")
     return JSONResponse(
@@ -81,8 +88,8 @@ async def _handle_validation_error(_request: Request, exc: Exception) -> JSONRes
     )
 
 
-async def _handle_http_exception(_request: Request, exc: Exception) -> JSONResponse:
-    assert isinstance(exc, StarletteHTTPException)  # noqa: S101
+async def _handle_http_exception(_request: Request, error: Exception) -> JSONResponse:
+    exc = _expect(error, StarletteHTTPException)
     message = exc.detail if isinstance(exc.detail, str) else HTTPStatus(exc.status_code).phrase
     return JSONResponse(
         status_code=exc.status_code,
