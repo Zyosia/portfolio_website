@@ -1,0 +1,164 @@
+name: Deploy
+
+# Automatic: after CI succeeds on `main`, build and push images tagged with the commit SHA
+# (+ latest), then deploy that SHA.
+# Manual / rollback: run this workflow with `image_tag` = a previously deployed SHA; no image
+# is built, the existing tag is redeployed. See docs/deployment.md.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Full git SHA of the images to deploy (rollback = an older SHA)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish ${{ matrix.service }} image
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - service: web
+            context: frontend
+            build-contexts: caddy=infra/caddy
+          - service: api
+            context: backend
+            build-contexts: ""
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/portfolio-${{ matrix.service }}
+          tags: |
+            type=raw,value=${{ github.event.workflow_run.head_sha }}
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: ${{ matrix.context }}
+          build-contexts: ${{ matrix.build-contexts }}
+          target: runtime
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            SITE_URL=${{ vars.SITE_URL }}
+          provenance: true
+          sbom: true
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+  deploy:
+    name: Deploy to the VPS
+    needs: publish
+    # Runs after a successful publish, or alone for a manual deploy / rollback.
+    if: >-
+      always() &&
+      (needs.publish.result == 'success' ||
+       (github.event_name == 'workflow_dispatch' && needs.publish.result == 'skipped'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: ${{ vars.SITE_URL }}
+    env:
+      IMAGE_TAG: ${{ inputs.image_tag || github.event.workflow_run.head_sha }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/opt/portfolio' }}
+    steps:
+      - name: Validate image tag
+        run: |
+          if ! [[ "$IMAGE_TAG" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::image_tag must be a full 40-character git SHA, got '$IMAGE_TAG'"
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Deploy the compose file that matches the images being deployed.
+          ref: ${{ env.IMAGE_TAG }}
+          persist-credentials: false
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          # Pinned host key: no trust-on-first-use from the runner.
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Upload compose file and deploy script
+        run: |
+          scp -q compose.yaml infra/scripts/deploy.sh \
+            "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
+
+      - name: Deploy
+        run: |
+          # Variables are meant to expand on the runner side.
+          # shellcheck disable=SC2029
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" \
+            "cd '$DEPLOY_PATH' && bash ./deploy.sh '$IMAGE_TAG'"
+
+      - name: Post-deploy health check
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          for attempt in $(seq 1 10); do
+            if curl --fail --silent --show-error --max-time 5 "$SITE_URL/api/health" \
+               && curl --fail --silent --output /dev/null --max-time 5 "$SITE_URL/"; then
+              echo "Healthy after $attempt attempt(s)."
+              exit 0
+            fi
+            sleep 6
+          done
+          echo "::error::$SITE_URL is not healthy after deploying $IMAGE_TAG. Roll back with docs/deployment.md."
+          exit 1
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Deployment"
+            echo "- Image tag: \`$IMAGE_TAG\`"
+            echo "- Result: ${{ job.status }}"
+            echo "- Rollback: run **Deploy** manually with a previous SHA."
+          } >> "$GITHUB_STEP_SUMMARY"

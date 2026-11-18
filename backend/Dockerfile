@@ -49,7 +49,14 @@ CMD ["fastapi", "dev", "app/main.py", "--host", "0.0.0.0", "--port", "8000"]
 # runtime: slim image, non-root user, no build tools
 # ---------------------------------------------------------------------------
 FROM base AS runtime
-RUN groupadd --system --gid 10001 app \
+# - Apply Debian security fixes published after the base image was built.
+# - Remove pip: not needed at runtime, and its vendored libraries are attack surface.
+# hadolint ignore=DL3005
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && python -m pip uninstall --yes pip \
+    && groupadd --system --gid 10001 app \
     && useradd --system --uid 10001 --gid app --no-create-home --shell /usr/sbin/nologin app
 COPY --from=builder /opt/venv /opt/venv
 COPY app ./app
