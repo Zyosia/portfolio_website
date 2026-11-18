@@ -1,0 +1,41 @@
+# --- Environment & secrets -------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- OS / editors ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# --- Node / Astro (frontend) -----------------------------------------------
+node_modules/
+dist/
+.astro/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# --- Python (backend) ------------------------------------------------------
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# --- Claude Code local settings ---------------------------------------------
+.claude/settings.local.json

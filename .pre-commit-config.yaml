@@ -1,0 +1,47 @@
+# Install with `make install` (runs `pre-commit install`).
+# Run manually on every file with `pre-commit run --all-files`.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: detect-private-key
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.5
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^backend/
+      - id: ruff-format
+        files: ^backend/
+
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.15.1
+    hooks:
+      # Runs hadolint through Docker so no local binary is needed.
+      - id: hadolint-docker
+
+  - repo: local
+    hooks:
+      - id: frontend-eslint
+        name: eslint (frontend)
+        language: system
+        entry: bash -c 'cd frontend && pnpm exec eslint --max-warnings=0 "${@#frontend/}"' --
+        files: ^frontend/.*\.(ts|js|mjs|astro)$
+      - id: frontend-prettier
+        name: prettier (frontend)
+        language: system
+        entry: bash -c 'cd frontend && pnpm exec prettier --check "${@#frontend/}"' --
+        files: ^frontend/.*\.(ts|js|mjs|astro|css|json|md|mdx|yaml)$
+        exclude: ^frontend/pnpm-lock\.yaml$
