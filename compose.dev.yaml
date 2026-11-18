@@ -1,0 +1,55 @@
+# Development overrides: `make dev` (docker compose -f compose.yaml -f compose.dev.yaml up).
+# - web: Astro dev server with hot reload on http://localhost:4321 (proxies /api to the API)
+# - api: FastAPI with auto-reload
+# - mailpit: catches every email; UI on http://localhost:8025. Nothing reaches a real inbox.
+
+services:
+  web:
+    image: portfolio-web:dev
+    build:
+      target: dev
+    command: ["pnpm", "dev", "--host", "0.0.0.0", "--port", "4321"]
+    environment:
+      API_PROXY_TARGET: http://api:8000
+      WATCH_POLLING: "true"
+    ports: !override
+      - "4321:4321"
+    volumes: !override
+      - ./frontend:/app
+      # Keep the Linux node_modules of the image instead of the host's.
+      - /app/node_modules
+    read_only: false
+    sysctls: !reset {}
+    depends_on: !override
+      - api
+
+  api:
+    image: portfolio-api:dev
+    build:
+      target: dev
+    environment:
+      APP_ENV: development
+      LOG_LEVEL: DEBUG
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      SMTP_USERNAME: ""
+      SMTP_PASSWORD: ""
+      SMTP_STARTTLS: "false"
+      SMTP_USE_TLS: "false"
+      CONTACT_FROM_EMAIL: ${CONTACT_FROM_EMAIL:-no-reply@example.com}
+      CONTACT_TO_EMAIL: ${CONTACT_TO_EMAIL:-you@example.com}
+      WATCHFILES_FORCE_POLLING: "true"
+    ports:
+      - "8000:8000" # direct access to /api/docs in development
+    volumes:
+      - ./backend/app:/app/app
+    read_only: false
+    depends_on:
+      - mailpit
+
+  mailpit:
+    image: axllent/mailpit:v1.34.0@sha256:23a2ef85bc50853ab3093645d1d64679afd8887e89da5e48a88940c172591a4e
+    ports:
+      - "8025:8025"
+    networks:
+      - backend

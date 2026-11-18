@@ -1,0 +1,86 @@
+# Production-like stack: `make up` locally, `docker compose pull && up -d` on the VPS.
+# Variables come from `.env` (see .env.example).
+name: portfolio
+
+x-hardening: &hardening
+  restart: unless-stopped
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop:
+    - ALL
+  security_opt:
+    - no-new-privileges:true
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  web:
+    <<: *hardening
+    image: ${WEB_IMAGE:-portfolio-web}:${IMAGE_TAG:-local}
+    build:
+      context: ./frontend
+      target: runtime
+      additional_contexts:
+        caddy: ./infra/caddy
+      args:
+        SITE_URL: ${SITE_URL:-https://localhost}
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    # Lets the non-root Caddy user bind ports 80/443 without any Linux capability.
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: 0
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - edge
+      - backend
+    depends_on:
+      api:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+
+  api:
+    <<: *hardening
+    image: ${API_IMAGE:-portfolio-api}:${IMAGE_TAG:-local}
+    build:
+      context: ./backend
+      target: runtime
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+    # No `ports`: the API is reachable only through Caddy on the backend network.
+    expose:
+      - "8000"
+    networks:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+
+networks:
+  # Public-facing network of the reverse proxy.
+  edge:
+  # Caddy <-> API traffic. Not `internal: true` because the API needs outbound access
+  # to the SMTP provider; it still publishes no port.
+  backend:
+
+volumes:
+  caddy_data:
+  caddy_config:

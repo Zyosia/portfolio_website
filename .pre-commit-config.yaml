@@ -10,6 +10,8 @@ repos:
       - id: mixed-line-ending
         args: [--fix=lf]
       - id: check-yaml
+        # Syntax-only parsing: Compose uses custom tags (!override, !reset).
+        args: [--unsafe]
       - id: check-toml
       - id: check-json
       - id: check-merge-conflict

@@ -50,5 +50,11 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      // Dev only: forward API calls so the browser keeps a single origin, as behind Caddy.
+      proxy: { '/api': process.env.API_PROXY_TARGET ?? 'http://localhost:8000' },
+      // File events do not cross Docker bind mounts on Windows/macOS: poll instead.
+      watch: process.env.WATCH_POLLING === 'true' ? { usePolling: true, interval: 300 } : {},
+    },
   },
 });
