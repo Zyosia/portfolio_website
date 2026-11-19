@@ -43,6 +43,7 @@ describe('projectSchema', () => {
 
 describe('cvSchema', () => {
   const validCv = {
+    pdf: '/cv-en.pdf',
     experience: [{ role: 'Engineer', organization: 'ACME', start: '2024-01' }],
     education: [],
     skills: [{ category: 'DevOps', items: ['Docker'] }],
@@ -61,5 +62,19 @@ describe('cvSchema', () => {
 
   it('requires at least one skill group', () => {
     expect(cvSchema.safeParse({ ...validCv, skills: [] }).success).toBe(false);
+  });
+});
+
+describe('cvSchema pdf', () => {
+  it.each(['cv.pdf', '/cv.docx', 'https://example.com/cv.pdf'])('rejects %j', (pdf) => {
+    const cv = {
+      pdf,
+      experience: [],
+      education: [],
+      skills: [{ category: 'DevOps', items: ['Docker'] }],
+      languages: [],
+      certifications: [],
+    };
+    expect(cvSchema.safeParse(cv).success).toBe(false);
   });
 });

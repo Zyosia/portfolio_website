@@ -1,0 +1,43 @@
+---
+import { alternatePath, LOCALE_META, LOCALES, type Locale } from '../lib/i18n/locales';
+import { ui } from '../lib/i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const pathname = Astro.url.pathname;
+---
+
+<!--
+  Plain links to the same page in each language: works without JavaScript, crawlable, and
+  each link is announced in its own language (lang + hreflang).
+-->
+<ul
+  aria-label={ui(locale).language.label}
+  class="flex items-center rounded-full border border-border p-0.5 font-mono text-xs"
+>
+  {LOCALES.map((target) => {
+    const meta = LOCALE_META[target];
+    const current = target === locale;
+    return (
+      <li>
+        <a
+          href={alternatePath(pathname, target)}
+          hreflang={target}
+          lang={target}
+          aria-current={current ? 'true' : undefined}
+          class:list={[
+            'block rounded-full px-2 py-1 transition-colors',
+            current ? 'bg-accent text-on-accent' : 'text-muted hover:text-fg',
+          ]}
+        >
+          {meta.shortLabel}
+          {/* The visible code stays part of the accessible name (WCAG 2.5.3). */}
+          <span class="sr-only"> {meta.nativeName}</span>
+        </a>
+      </li>
+    );
+  })}
+</ul>

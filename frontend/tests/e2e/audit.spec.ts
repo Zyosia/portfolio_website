@@ -8,6 +8,8 @@ import { expect, test, type APIRequestContext } from '@playwright/test';
  */
 
 test.skip(({ isMobile }) => isMobile, 'Site-wide audits run once, on desktop.');
+// Each audit visits every page of every language, so its duration grows with the site.
+test.describe.configure({ timeout: 120_000 });
 
 async function sitemapPaths(request: APIRequestContext): Promise<string[]> {
   const xml = await (await request.get('/sitemap.xml')).text();
@@ -23,7 +25,7 @@ test('sitemap pages and every internal link or asset they reference respond 200'
   expect(pages.length).toBeGreaterThanOrEqual(6);
 
   const origin = new URL(baseURL ?? '').origin;
-  const targets = new Set<string>(['/robots.txt', '/favicon.svg', '/cv.pdf']);
+  const targets = new Set<string>(['/robots.txt', '/favicon.svg', '/cv-en.pdf', '/cv-fr.pdf']);
 
   for (const path of pages) {
     await page.goto(path);
@@ -54,13 +56,19 @@ test('sitemap pages and every internal link or asset they reference respond 200'
   expect(broken).toEqual([]);
 });
 
-test('every page has complete and unique SEO metadata', async ({ page, request }) => {
-  const titles = new Set<string>();
-  const descriptions = new Set<string>();
+test('every page has complete metadata, unique within its language', async ({ page, request }) => {
+  // Some titles are legitimately identical across languages ("Contact", "CV").
+  const seen = new Map<string, { titles: Set<string>; descriptions: Set<string> }>();
 
   for (const path of await sitemapPaths(request)) {
     await page.goto(path);
     const head = page.locator('head');
+    const locale = path === '/fr' || path.startsWith('/fr/') ? 'fr' : 'en';
+    const { titles, descriptions } = seen.get(locale) ?? {
+      titles: new Set(),
+      descriptions: new Set(),
+    };
+    seen.set(locale, { titles, descriptions });
 
     const title = await page.title();
     const description =
@@ -75,7 +83,10 @@ test('every page has complete and unique SEO metadata', async ({ page, request }
     expect
       .soft(canonical, `${path}: canonical`)
       .toMatch(new RegExp(`${path === '/' ? '/' : path}$`));
-    expect.soft(await page.locator('html').getAttribute('lang'), `${path}: lang`).toBe('en');
+    expect.soft(await page.locator('html').getAttribute('lang'), `${path}: lang`).toBe(locale);
+    await expect
+      .soft(head.locator('link[rel="alternate"][hreflang]'), `${path}: hreflang alternates`)
+      .toHaveCount(3);
     await expect.soft(page.locator('h1'), `${path}: one h1`).toHaveCount(1);
     for (const property of ['og:title', 'og:description', 'og:url', 'og:type']) {
       await expect

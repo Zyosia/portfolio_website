@@ -6,6 +6,9 @@ import {
   toggleLabel,
   type Theme,
 } from '../lib/theme';
+import { parseLocale } from '../lib/i18n/locales';
+
+const locale = parseLocale(document.documentElement.lang);
 
 const root = document.documentElement;
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -34,8 +37,8 @@ function currentTheme(): Theme {
 function applyTheme(theme: Theme, buttons: readonly HTMLButtonElement[]): void {
   root.dataset['theme'] = theme;
   for (const button of buttons) {
-    button.setAttribute('aria-label', toggleLabel(theme));
-    button.title = toggleLabel(theme);
+    button.setAttribute('aria-label', toggleLabel(theme, locale));
+    button.title = toggleLabel(theme, locale);
   }
 }
 

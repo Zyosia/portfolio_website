@@ -1,11 +1,11 @@
 ---
 title: Rust / AI competition platform
-summary: A platform to pit Rust programs against each other on the strategy game Breakthrough, with its own game engine and match management.
+summary: A platform to compare Rust programs playing Breakthrough, a strategy board game, with its own game engine and match management.
 date: 2025-05-01
 tags: [Rust, AI, Game development]
 techStack: [Rust]
 # TODO(content): replace with a screenshot or diagram of the platform.
-cover: ../../assets/projects/rust-ai-competition-platform.svg
+cover: ../../../assets/projects/rust-ai-competition-platform.svg
 coverAlt: Cover illustration with the project name and its stack
 featured: true
 draft: false
@@ -13,8 +13,8 @@ draft: false
 
 ## Overview
 
-From February to May 2025, I developed a platform for comparing Rust programs that play
-**Breakthrough**, a two-player abstract strategy game. Competing programs, typically game-playing
+From February to May 2025, I built a platform to compare Rust programs playing
+**Breakthrough**, a two-player strategy board game. Competing programs, typically game-playing
 AIs, are plugged into the platform and play matches against each other.
 
 ## What I built

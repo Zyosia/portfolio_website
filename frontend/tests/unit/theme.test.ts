@@ -30,8 +30,10 @@ describe('oppositeTheme / toggleLabel', () => {
     expect(oppositeTheme('dark')).toBe('light');
   });
 
-  it('describes the action the button performs', () => {
-    expect(toggleLabel('light')).toBe('Switch to dark theme');
-    expect(toggleLabel('dark')).toBe('Switch to light theme');
+  it('describes the action the button performs, in the page language', () => {
+    expect(toggleLabel('light', 'en')).toBe('Switch to dark theme');
+    expect(toggleLabel('dark', 'en')).toBe('Switch to light theme');
+    expect(toggleLabel('light', 'fr')).toBe('Passer au thème sombre');
+    expect(toggleLabel('dark', 'fr')).toBe('Passer au thème clair');
   });
 });

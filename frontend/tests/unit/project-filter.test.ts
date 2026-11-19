@@ -42,7 +42,10 @@ describe('matchesTag', () => {
 
 describe('describeResults', () => {
   it('handles plural and singular, with and without a tag', () => {
-    expect(describeResults(3, null)).toBe('Showing all 3 projects');
-    expect(describeResults(1, 'AI')).toBe('Showing 1 project tagged AI');
+    expect(describeResults(3, null, 'en')).toBe('Showing all 3 projects');
+    expect(describeResults(1, 'AI', 'en')).toBe('Showing 1 project tagged AI');
+    expect(describeResults(3, null, 'fr')).toBe('Les 3 projets sont affichés');
+    expect(describeResults(1, null, 'fr')).toBe('1 projet affiché');
+    expect(describeResults(2, 'IA', 'fr')).toBe('2 projets avec l’étiquette IA');
   });
 });

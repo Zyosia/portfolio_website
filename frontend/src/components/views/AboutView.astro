@@ -1,0 +1,78 @@
+---
+import { Image } from 'astro:assets';
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCv, getProfile } from '../../lib/content';
+import { localizePath, type Locale } from '../../lib/i18n/locales';
+import { ui } from '../../lib/i18n/ui';
+import { initials } from '../../lib/text';
+import ButtonLink from '../ButtonLink.astro';
+import PageHeader from '../PageHeader.astro';
+import SectionHeading from '../SectionHeading.astro';
+import SkillGroups from '../SkillGroups.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale).about;
+const [profile, cv] = await Promise.all([getProfile(locale), getCv(locale)]);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.title}
+  description={t.description(profile.name)}
+  ogType="profile"
+>
+  <PageHeader title={t.title} path="~/about" />
+
+  <div class="grid items-start gap-10 md:grid-cols-[16rem_1fr] lg:gap-16">
+    {profile.photo ? (
+      <Image
+        src={profile.photo}
+        alt={profile.photoAlt ?? ''}
+        widths={[256, 512]}
+        sizes="16rem"
+        loading="eager"
+        class="aspect-square w-48 rounded-(--radius-card) border border-border object-cover md:w-64"
+      />
+    ) : (
+      <div
+        aria-hidden="true"
+        class="flex aspect-square w-48 items-center justify-center rounded-(--radius-card) border border-border bg-surface-muted font-mono text-5xl font-semibold text-accent md:w-64"
+      >
+        {initials(profile.name)}
+      </div>
+    )}
+    <div class="max-w-(--container-prose) space-y-4 text-lg">
+      {profile.bio.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+      <div class="flex flex-wrap gap-3 pt-4">
+        <ButtonLink href={localizePath('/cv', locale)}>{t.readCv}</ButtonLink>
+        <ButtonLink href={localizePath('/contact', locale)} variant="secondary">
+          {t.contactMe}
+        </ButtonLink>
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-20" aria-labelledby="interests-title">
+    <SectionHeading index="01" title={t.interests} id="interests-title" />
+    <ul class="grid gap-4 md:grid-cols-3">
+      {profile.interests.map((interest) => (
+        <li class="rounded-(--radius-card) border border-border bg-surface p-6">
+          <h3 class="font-semibold">{interest.title}</h3>
+          <p class="mt-2 text-sm text-muted">{interest.description}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="mt-16" aria-labelledby="skills-title">
+    <SectionHeading index="02" title={t.skills} id="skills-title" />
+    <SkillGroups groups={cv.skills} />
+  </section>
+</BaseLayout>

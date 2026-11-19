@@ -7,9 +7,12 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Seo from '../components/Seo.astro';
 import { getProfile } from '../lib/content';
+import type { Locale } from '../lib/i18n/locales';
+import { ui } from '../lib/i18n/ui';
 import { THEME_STORAGE_KEY } from '../lib/theme';
 
 interface Props {
+  locale: Locale;
   /** Page title; omitted on the home page, which uses the site name alone. */
   title?: string;
   /** Meta description; defaults to the profile description. */
@@ -18,12 +21,12 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title, description, ogType, noindex } = Astro.props;
-const profile = await getProfile();
+const { locale, title, description, ogType, noindex } = Astro.props;
+const profile = await getProfile(locale);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -44,6 +47,7 @@ const profile = await getProfile();
     <Font cssVariable="--font-inter" preload />
     <Font cssVariable="--font-jetbrains-mono" />
     <Seo
+      locale={locale}
       siteName={profile.name}
       description={description ?? profile.description}
       title={title}
@@ -59,9 +63,9 @@ const profile = await getProfile();
       href="#main"
       class="sr-only z-50 rounded-md bg-accent px-4 py-2 text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
     >
-      Skip to content
+      {ui(locale).skipToContent}
     </a>
-    <Header siteName={profile.name} />
+    <Header locale={locale} siteName={profile.name} />
     <main
       id="main"
       tabindex="-1"
@@ -69,6 +73,6 @@ const profile = await getProfile();
     >
       <slot />
     </main>
-    <Footer siteName={profile.name} links={profile.links} />
+    <Footer locale={locale} siteName={profile.name} links={profile.links} />
   </body>
 </html>

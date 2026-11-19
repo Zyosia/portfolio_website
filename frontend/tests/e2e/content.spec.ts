@@ -55,9 +55,13 @@ test.describe('CV', () => {
   test('offers the PDF download', async ({ page, request }) => {
     await page.goto('/cv');
     const link = page.getByRole('link', { name: /^Download PDF/ });
-    await expect(link).toHaveAttribute('href', '/cv.pdf');
+    await expect(link).toHaveAttribute('href', '/cv-en.pdf');
+    await expect(page.getByRole('link', { name: 'Français (PDF)' })).toHaveAttribute(
+      'href',
+      '/cv-fr.pdf',
+    );
 
-    const pdf = await request.get('/cv.pdf');
+    const pdf = await request.get('/cv-en.pdf');
     expect(pdf.status()).toBe(200);
     expect((await pdf.body()).subarray(0, 5).toString()).toBe('%PDF-');
   });

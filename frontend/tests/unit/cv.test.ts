@@ -24,21 +24,23 @@ describe('parseCvDate', () => {
 
 describe('formatCvDate / formatPeriod', () => {
   it('formats a month and a year-only date', () => {
-    expect(formatCvDate('2021-09')).toBe('Sep 2021');
-    expect(formatCvDate('2021')).toBe('2021');
+    expect(formatCvDate('2021-09', 'en')).toBe('Sep 2021');
+    expect(formatCvDate('2021-09', 'fr')).toBe('sept. 2021');
+    expect(formatCvDate('2021', 'fr')).toBe('2021');
   });
 
   it('formats a closed period', () => {
-    expect(formatPeriod('2021-09', '2026-06')).toBe('Sep 2021 – Jun 2026');
-    expect(formatPeriod('2020', '2023')).toBe('2020 – 2023');
+    expect(formatPeriod('2021-09', '2026-06', 'en')).toBe('Sep 2021 – Jun 2026');
+    expect(formatPeriod('2020', '2023', 'en')).toBe('2020 – 2023');
   });
 
-  it('formats an ongoing period', () => {
-    expect(formatPeriod('2025-01')).toBe('Jan 2025 – Present');
+  it('formats an ongoing period in the page language', () => {
+    expect(formatPeriod('2025-01', undefined, 'en')).toBe('Jan 2025 – Present');
+    expect(formatPeriod('2025-01', undefined, 'fr')).toBe('janv. 2025 – Aujourd’hui');
   });
 
   it('collapses a period that starts and ends in the same month', () => {
-    expect(formatPeriod('2022-06', '2022-06')).toBe('Jun 2022');
+    expect(formatPeriod('2022-06', '2022-06', 'en')).toBe('Jun 2022');
   });
 });
 

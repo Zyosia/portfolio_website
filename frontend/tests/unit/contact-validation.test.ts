@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   CONTACT_LIMITS,
+  fieldErrorMessage,
   normalizeContact,
   validateContact,
   type ContactValues,
@@ -21,20 +22,18 @@ describe('validateContact', () => {
   });
 
   it.each([
-    ['name', { name: '   ' }],
-    ['name', { name: 'x'.repeat(CONTACT_LIMITS.nameMax + 1) }],
-    ['name', { name: 'Ada\nBcc: x@example.com' }],
-    ['email', { email: '' }],
-    ['email', { email: 'ada@' }],
-    ['email', { email: 'ada example@org.com' }],
-    ['subject', { subject: 'x'.repeat(CONTACT_LIMITS.subjectMax + 1) }],
-    ['subject', { subject: 'Hi\r\nthere' }],
-    ['message', { message: '  too short  ' }],
-    ['message', { message: 'x'.repeat(CONTACT_LIMITS.messageMax + 1) }],
-  ] as const)('reports an error on %s', (field, override) => {
-    const errors = validateContact({ ...valid, ...override });
-    expect(Object.keys(errors)).toEqual([field]);
-    expect(errors[field]).toMatch(/^Please|must fit/);
+    ['name', 'required', { name: '   ' }],
+    ['name', 'tooLong', { name: 'x'.repeat(CONTACT_LIMITS.nameMax + 1) }],
+    ['name', 'multiline', { name: 'Ada\nBcc: x@example.com' }],
+    ['email', 'required', { email: '' }],
+    ['email', 'invalid', { email: 'ada@' }],
+    ['email', 'invalid', { email: 'ada example@org.com' }],
+    ['subject', 'tooLong', { subject: 'x'.repeat(CONTACT_LIMITS.subjectMax + 1) }],
+    ['subject', 'multiline', { subject: 'Hi\r\nthere' }],
+    ['message', 'tooShort', { message: '  too short  ' }],
+    ['message', 'tooLong', { message: 'x'.repeat(CONTACT_LIMITS.messageMax + 1) }],
+  ] as const)('reports %s: %s', (field, code, override) => {
+    expect(validateContact({ ...valid, ...override })).toEqual({ [field]: code });
   });
 
   it('accepts values exactly at the limits', () => {
@@ -59,5 +58,20 @@ describe('normalizeContact', () => {
     expect(
       normalizeContact({ ...valid, name: '  Ada  ', subject: ' Hi ', website: ' x ' }),
     ).toMatchObject({ name: 'Ada', subject: 'Hi', website: ' x ' });
+  });
+});
+
+describe('fieldErrorMessage', () => {
+  it('localises messages and includes the relevant limit', () => {
+    expect(fieldErrorMessage('name', 'required', 'en')).toBe('Please enter your name.');
+    expect(fieldErrorMessage('email', 'required', 'fr')).toBe(
+      'Veuillez saisir votre adresse e-mail.',
+    );
+    expect(fieldErrorMessage('message', 'tooShort', 'en')).toContain(
+      String(CONTACT_LIMITS.messageMin),
+    );
+    expect(fieldErrorMessage('subject', 'tooLong', 'fr')).toContain(
+      String(CONTACT_LIMITS.subjectMax),
+    );
   });
 });

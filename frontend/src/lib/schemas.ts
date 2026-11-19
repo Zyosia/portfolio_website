@@ -67,10 +67,8 @@ const skillGroupSchema = z.object({
 });
 
 export const cvSchema = z.object({
-  /** Language of public/cv.pdf, as a BCP 47 tag, when it differs from the site (English). */
-  pdfLanguage: z
-    .object({ tag: z.string().regex(/^[a-z]{2,3}(-[A-Za-z0-9]+)*$/), label: nonEmpty })
-    .optional(),
+  /** Downloadable PDF of this CV, in the same language, served from public/. */
+  pdf: z.string().regex(/^\/[\w.-]+\.pdf$/, 'Expected a root-relative path such as /cv-en.pdf'),
   experience: z.array(
     z.object({
       role: nonEmpty,

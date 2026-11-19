@@ -1,11 +1,10 @@
-# Structured CV. Validated by `cvSchema` in src/lib/schemas.ts.
-# Source: public/cv.pdf (French), translated. Dates: YYYY-MM, or YYYY when only the year is
-# known; omit `end` for a current position. Skills are also shown on the home and about pages.
-main:
-  pdfLanguage:
-    tag: fr
-    label: in French
+# Structured CV, one entry per locale (en, fr). Validated by `cvSchema` in src/lib/schemas.ts.
+# Sources: public/cv-en.pdf and public/cv-fr.pdf; keep them in sync with this file.
+# Dates: YYYY-MM, or YYYY when only the year is known; omit `end` for a current position.
+# Skills are also shown on the home and about pages.
 
+en:
+  pdf: /cv-en.pdf
   experience:
     - role: Software Engineer, final-year internship
       organization: EDZO
@@ -14,7 +13,7 @@ main:
       highlights:
         - Developed full-stack features for a SaaS platform with Python, FastAPI and React.
         - Designed a dashboard analysing the usage and costs of AI models from BigQuery data.
-        - Developed and automated business processes and data processing.
+        - Developed and automated business processes and data processing workflows.
         - Maintained and improved the reliability of decision-support tools built with Google
           Apps Script and Google Sheets.
     - role: Software Engineer, internship
@@ -22,43 +21,40 @@ main:
       start: '2025-05'
       end: '2025-08'
       highlights:
-        - Developed a RAG pipeline in Python integrating OCR, embeddings and vector databases.
-        - Built a reporting system based on OWL, RDF and SPARQL, and explored knowledge graphs.
+        - Built a RAG pipeline in Python integrating OCR, embeddings and vector databases.
+        - Designed a reporting system with OWL, RDF and SPARQL and explored knowledge graphs.
         - Developed MCP servers connected to Notion and deployed with Docker.
-        - Conducted a preliminary study of a Graph-RAG architecture applied to financial
-          reporting.
+        - Carried out a feasibility study of a Graph-RAG architecture for financial reporting.
     - role: IT Assistant, internship
       organization: FD&Z
       start: '2023-09'
       end: '2023-11'
       highlights:
-        - Developed internal tools and dashboards, automated business processes, and worked
-          with Visual Basic.
+        - Developed internal tools and dashboards, and automated business processes with Visual
+          Basic.
     - role: Web Developer, internship
       organization: Moloko SARL
       start: '2022-06'
       end: '2022-06'
       highlights:
         - Developed an e-commerce website and internal tools.
-
   education:
-    - degree: Engineering degree (Diplôme d'ingénieur), Computer Science
+    - degree: MEng, Computer Science
       institution: ESIEE Paris
       start: '2023'
       end: '2026'
       details:
-        - Academic exchange at Heriot-Watt University (2025).
+        - Exchange semester at Heriot-Watt University (2025).
     - degree: Integrated preparatory classes
       institution: ESIEE Paris
       start: '2020'
       end: '2023'
-    - degree: French Baccalauréat (general), with honours (mention Bien)
+    - degree: French Baccalaureate, with honors
       institution: Lycée St-Pierre-Fourrier
       start: '2017'
       end: '2020'
-
   skills:
-    - category: Programming languages
+    - category: Programming
       items: [Python, Rust, C, C++, Java, JavaScript, SQL]
     - category: Backend & Web
       items: [FastAPI, React, REST]
@@ -67,9 +63,8 @@ main:
         [Machine Learning, Computer Vision, RAG, Embeddings, PyTorch, Vector databases, BigQuery]
     - category: DevOps & Tools
       items: [Docker, Git, GitHub, Google Apps Script]
-    - category: Modelling
+    - category: Modeling
       items: [UML, OWL, RDF, SPARQL]
-
   languages:
     - name: French
       level: Native
@@ -79,5 +74,81 @@ main:
       level: B1
     - name: Japanese
       level: A2
+  certifications: []
 
+fr:
+  pdf: /cv-fr.pdf
+  experience:
+    - role: Ingénieur Développeur, stage de fin d’études
+      organization: EDZO
+      start: '2026-04'
+      end: '2026-10'
+      highlights:
+        - Développement full-stack de fonctionnalités sur une plateforme SaaS avec Python,
+          FastAPI et React.
+        - Conception d’un dashboard pour analyser la consommation et les coûts des modèles d’IA
+          à partir de données BigQuery.
+        - Développement et automatisation de processus métier et de traitements de données.
+        - Maintenance et fiabilisation d’outils décisionnels avec Google Apps Script et Google
+          Sheets.
+    - role: Ingénieur Développeur, stage
+      organization: e-Science Data Factory
+      start: '2025-05'
+      end: '2025-08'
+      highlights:
+        - Développement d’un pipeline RAG en Python intégrant OCR, embeddings et bases de
+          données vectorielles.
+        - Mise en place d’un système de reporting basé sur les technologies OWL, RDF et SPARQL
+          et exploration des graphes de connaissances.
+        - Développement de serveurs MCP connectés à Notion et déployés avec Docker.
+        - Étude préalable d’une architecture Graph-RAG appliquée au reporting financier.
+    - role: Assistant Informaticien, stage
+      organization: FD&Z
+      start: '2023-09'
+      end: '2023-11'
+      highlights:
+        - Développement d’outils et de tableaux de bord internes, automatisation de processus
+          métier et utilisation de Visual Basic.
+    - role: Développement Web, stage
+      organization: Moloko SARL
+      start: '2022-06'
+      end: '2022-06'
+      highlights:
+        - Développement d’un site e-commerce et d’outils internes.
+  education:
+    - degree: Diplôme d’ingénieur, Informatique
+      institution: ESIEE Paris
+      start: '2023'
+      end: '2026'
+      details:
+        - Échange universitaire à la Heriot-Watt University (2025).
+    - degree: Classes préparatoires intégrées
+      institution: ESIEE Paris
+      start: '2020'
+      end: '2023'
+    - degree: Baccalauréat général, mention Bien
+      institution: Lycée St-Pierre-Fourrier
+      start: '2017'
+      end: '2020'
+  skills:
+    - category: Langages
+      items: [Python, Rust, C, C++, Java, JavaScript, SQL]
+    - category: Backend & Web
+      items: [FastAPI, React, REST]
+    - category: IA & Data
+      items:
+        [Machine Learning, Computer Vision, RAG, Embeddings, PyTorch, Bases vectorielles, BigQuery]
+    - category: DevOps & Outils
+      items: [Docker, Git, GitHub, Google Apps Script]
+    - category: Modélisation
+      items: [UML, OWL, RDF, SPARQL]
+  languages:
+    - name: Français
+      level: Langue maternelle
+    - name: Anglais
+      level: C1 (TOEIC 945)
+    - name: Espagnol
+      level: B1
+    - name: Japonais
+      level: A2
   certifications: []

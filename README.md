@@ -24,8 +24,9 @@ vulnerability scanning, and architecture decision records.
 - **About** and **CV**: rendered from structured YAML; CV with PDF download and print stylesheet.
 - **Contact**: accessible form → FastAPI → transactional SMTP provider, with honeypot,
   per-IP rate limiting and announced loading/success/error states.
-- **Everywhere**: responsive layout, light/dark theme (system default, remembered choice),
-  SEO metadata, sitemap, robots.txt, strict Content Security Policy, 404 page.
+- **Everywhere**: English and French (switch in the header, `/fr/...` URLs, `hreflang`),
+  responsive layout, light/dark theme (system default, remembered choice), SEO metadata,
+  sitemap, robots.txt, strict Content Security Policy, localised 404 page.
 
 ## Architecture
 
@@ -103,17 +104,20 @@ Per-app commands (`pnpm …`, `uv run …`) are listed in [`CLAUDE.md`](CLAUDE.m
 
 ## Editing the content
 
-All personal content is marked `TODO(content)`: `grep -rn "TODO(content)" frontend/src`.
+The site is bilingual: every piece of content exists in English (`en`) and French (`fr`).
+Remaining placeholders are marked `TODO(content)`: `grep -rn "TODO(content)" frontend/src`.
 
 | To change | Edit |
 |---|---|
-| Name, title, pitch, bio, interests, links, photo | `frontend/src/content/profile.yaml` (+ image in `frontend/src/assets/`) |
-| CV (experience, education, skills, languages, certifications) | `frontend/src/content/cv.yaml` |
-| Downloadable CV | replace `frontend/public/cv.pdf` |
-| Projects | add `frontend/src/content/projects/<slug>.md` |
+| Name, title, pitch, bio, interests, links, photo | `frontend/src/content/profile.yaml`, `en:` and `fr:` entries (+ image in `frontend/src/assets/`) |
+| CV (experience, education, skills, languages, certifications) | `frontend/src/content/cv.yaml`, `en:` and `fr:` entries |
+| Downloadable CVs | replace `frontend/public/cv-en.pdf` and `frontend/public/cv-fr.pdf` |
+| Projects | add `frontend/src/content/projects/en/<slug>.md` **and** `projects/fr/<slug>.md` |
+| Interface labels (buttons, headings, messages) | `frontend/src/lib/i18n/ui.ts` and `client-strings.ts` |
 
-A project is one Markdown file; its name is the URL slug. Front matter is validated at build
-time, so a missing or invalid field fails the build with a clear message:
+A project is one Markdown file per language; the file name is the URL slug, identical in both
+languages (`/projects/<slug>` and `/fr/projects/<slug>`). Front matter is validated at build
+time, and a project missing in one language fails the build with a clear message:
 
 ```markdown
 ---
@@ -166,14 +170,14 @@ The full procedure, from an empty VPS to rollback, is in
 │   └── scripts/deploy.sh     # pull, start, wait for health, history
 ├── frontend/                 # Astro site
 │   ├── src/
-│   │   ├── components/       # UI components
+│   │   ├── components/       # UI components; views/ holds page bodies shared by locales
 │   │   ├── layouts/          # BaseLayout (head, theme, header, footer)
-│   │   ├── pages/            # routes (thin), sitemap.xml, robots.txt
-│   │   ├── content/          # profile.yaml, cv.yaml, projects/*.md
-│   │   ├── lib/              # pure, unit-tested logic and Zod schemas
+│   │   ├── pages/            # thin routes (English at the root, French in fr/), sitemap, robots
+│   │   ├── content/          # profile.yaml, cv.yaml, projects/{en,fr}/*.md
+│   │   ├── lib/              # pure, unit-tested logic, Zod schemas, i18n/ (locales, strings)
 │   │   ├── scripts/          # small client scripts (theme, filter, contact form)
 │   │   └── styles/           # design tokens and global CSS
-│   ├── public/               # favicon, cv.pdf
+│   ├── public/               # favicon, cv-en.pdf, cv-fr.pdf
 │   ├── tests/                # unit/ (Vitest), e2e/ (Playwright + axe)
 │   └── Dockerfile
 └── backend/                  # FastAPI API
@@ -193,7 +197,8 @@ The full procedure, from an empty VPS to rollback, is in
   [architecture](docs/adr/0002-architecture-static-frontend-api-reverse-proxy.md) ·
   [design direction](docs/adr/0003-design-direction.md) ·
   [backend building blocks](docs/adr/0004-backend-building-blocks.md) ·
-  [containers and reverse proxy](docs/adr/0005-containers-and-reverse-proxy.md)
+  [containers and reverse proxy](docs/adr/0005-containers-and-reverse-proxy.md) ·
+  [internationalisation](docs/adr/0006-internationalisation.md)
 - [Deployment guide](docs/deployment.md)
 - [Contributor and AI-assistant conventions](CLAUDE.md)
 

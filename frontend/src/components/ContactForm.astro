@@ -1,6 +1,14 @@
 ---
 import { CONTACT_ENDPOINT } from '../lib/contact-api';
 import { CONTACT_LIMITS } from '../lib/contact-validation';
+import type { Locale } from '../lib/i18n/locales';
+import { ui } from '../lib/i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const t = ui(Astro.props.locale).contact;
 
 const labelClass = 'block text-sm font-semibold';
 const fieldClass =
@@ -16,13 +24,13 @@ const errorClass = 'mt-1.5 text-sm text-danger';
   aria-describedby="contact-required-hint"
 >
   <p id="contact-required-hint" class="text-sm text-muted">
-    Required fields are marked with an asterisk (*).
+    {t.requiredHint}
   </p>
 
   <div class="grid gap-6 sm:grid-cols-2">
     <div>
       <label for="contact-name" class={labelClass}>
-        Name <span aria-hidden="true">*</span>
+        {t.name} <span aria-hidden="true">*</span>
       </label>
       <input
         id="contact-name"
@@ -39,7 +47,7 @@ const errorClass = 'mt-1.5 text-sm text-danger';
 
     <div>
       <label for="contact-email" class={labelClass}>
-        Email <span aria-hidden="true">*</span>
+        {t.email} <span aria-hidden="true">*</span>
       </label>
       <input
         id="contact-email"
@@ -58,7 +66,7 @@ const errorClass = 'mt-1.5 text-sm text-danger';
 
   <div>
     <label for="contact-subject" class={labelClass}>
-      Subject <span class="font-normal text-muted">(optional)</span>
+      {t.subject} <span class="font-normal text-muted">{t.optional}</span>
     </label>
     <input
       id="contact-subject"
@@ -73,7 +81,7 @@ const errorClass = 'mt-1.5 text-sm text-danger';
 
   <div>
     <label for="contact-message" class={labelClass}>
-      Message <span aria-hidden="true">*</span>
+      {t.message} <span aria-hidden="true">*</span>
     </label>
     <textarea
       id="contact-message"
@@ -93,7 +101,7 @@ const errorClass = 'mt-1.5 text-sm text-danger';
     so only bots fill it in. The server silently drops messages where it is not empty.
   -->
   <div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
-    <label for="contact-website">Website</label>
+    <label for="contact-website">{t.website}</label>
     <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
@@ -102,7 +110,7 @@ const errorClass = 'mt-1.5 text-sm text-danger';
       type="submit"
       class="inline-flex items-center justify-center rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-strong disabled:cursor-wait disabled:opacity-70"
     >
-      Send message
+      {t.send}
     </button>
     <p
       data-form-status
@@ -113,9 +121,7 @@ const errorClass = 'mt-1.5 text-sm text-danger';
   </div>
 
   <noscript>
-    <p class="text-sm text-muted">
-      This form needs JavaScript. You can also reach me through the links on this page.
-    </p>
+    <p class="text-sm text-muted">{t.noScript}</p>
   </noscript>
 </form>
 

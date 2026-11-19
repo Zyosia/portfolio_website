@@ -51,8 +51,7 @@ describe('submitContact', () => {
     [502, 'unavailable'],
   ] as const)('maps HTTP %i to %s', async (status, reason) => {
     const result = await submitContact(values, respond(status));
-    expect(result).toMatchObject({ ok: false, reason });
-    expect(result.ok || result.message.length > 0).toBe(true);
+    expect(result).toEqual({ ok: false, reason });
   });
 
   it('maps network failures without throwing', async () => {

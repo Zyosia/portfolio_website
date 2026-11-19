@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCv, getProfile, getProjects } from '../../lib/content';
+import { localizePath, type Locale } from '../../lib/i18n/locales';
+import { ui } from '../../lib/i18n/ui';
+import { selectFeatured } from '../../lib/projects';
+import ButtonLink from '../ButtonLink.astro';
+import ProjectCard from '../ProjectCard.astro';
+import SectionHeading from '../SectionHeading.astro';
+import SkillGroups from '../SkillGroups.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale).home;
+const [profile, cv, projects] = await Promise.all([
+  getProfile(locale),
+  getCv(locale),
+  getProjects(locale),
+]);
+const featured = selectFeatured(projects, 3);
+const link = (path: string) => localizePath(path, locale);
+---
+
+<BaseLayout locale={locale} ogType="profile">
+  <section class="py-20 sm:py-28" aria-labelledby="hero-title">
+    <p class="font-mono text-sm text-accent">
+      <span aria-hidden="true">$ </span>whoami
+    </p>
+    <h1 id="hero-title" class="mt-4 text-5xl font-bold tracking-tight text-balance sm:text-7xl">
+      {profile.name}
+    </h1>
+    <p class="mt-4 text-xl text-muted sm:text-2xl">
+      {profile.jobTitle}
+      <span class="font-mono text-base"> @ {profile.location}</span>
+    </p>
+    <p class="mt-6 max-w-(--container-prose) text-lg">{profile.pitch}</p>
+    <div class="mt-10 flex flex-wrap gap-3">
+      <ButtonLink href={link('/projects')}>{t.viewProjects}</ButtonLink>
+      <ButtonLink href={link('/contact')} variant="secondary">
+        {t.getInTouch}
+      </ButtonLink>
+    </div>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="py-12" aria-labelledby="featured-title">
+      <SectionHeading index="01" title={t.featured} id="featured-title">
+        <a href={link('/projects')} class="font-mono text-sm text-muted hover:text-accent">
+          {t.allProjects} <span aria-hidden="true">→</span>
+        </a>
+      </SectionHeading>
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {featured.map((project, index) => (
+          <li>
+            <ProjectCard project={project} eager={index === 0} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="py-12" aria-labelledby="skills-title">
+    <SectionHeading index="02" title={t.skills} id="skills-title">
+      <a href={link('/cv')} class="font-mono text-sm text-muted hover:text-accent">
+        {t.fullCv} <span aria-hidden="true">→</span>
+      </a>
+    </SectionHeading>
+    <SkillGroups groups={cv.skills} />
+  </section>
+
+  <section class="py-12" aria-labelledby="contact-title">
+    <SectionHeading index="03" title={t.talkTitle} id="contact-title" />
+    <div class="flex flex-col items-start gap-6 rounded-(--radius-card) border border-border bg-surface p-8 sm:flex-row sm:items-center sm:justify-between">
+      <p class="max-w-(--container-prose) text-lg">{t.talkText}</p>
+      <ButtonLink href={link('/contact')}>{t.contactMe}</ButtonLink>
+    </div>
+  </section>
+</BaseLayout>

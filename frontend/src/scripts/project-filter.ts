@@ -4,6 +4,9 @@ import {
   matchesTag,
   readSelectedTag,
 } from '../lib/project-filter';
+import { parseLocale } from '../lib/i18n/locales';
+
+const locale = parseLocale(document.documentElement.lang);
 
 /** `""` on the "All" button means "no tag selected". */
 function tagOf(button: HTMLButtonElement): string | null {
@@ -32,7 +35,7 @@ function initProjectFilter(root: HTMLElement): void {
       if (show) visible += 1;
     }
 
-    if (announce && status) status.textContent = describeResults(visible, selectedLabel);
+    if (announce && status) status.textContent = describeResults(visible, selectedLabel, locale);
   }
 
   for (const button of buttons) {

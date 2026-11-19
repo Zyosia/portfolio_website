@@ -3,11 +3,8 @@
  * schema). Precision is preserved when displaying: no invented months.
  */
 
-const monthFormatter = new Intl.DateTimeFormat('en', {
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
+import type { Locale } from './i18n/locales';
+import { ui } from './i18n/ui';
 
 const CV_DATE = /^(\d{4})(?:-(\d{2}))?$/;
 
@@ -24,19 +21,25 @@ export function parseCvDate(value: string): CvDate {
   return { date: new Date(Date.UTC(Number(match[1]), month, 1)), hasMonth: Boolean(match[2]) };
 }
 
-/** `"Sep 2021"`, or `"2021"` for a year-only date. */
-export function formatCvDate(value: string): string {
+/** `"Sep 2021"` / `"sept. 2021"`, or `"2021"` for a year-only date. */
+export function formatCvDate(value: string, locale: Locale): string {
   const { date, hasMonth } = parseCvDate(value);
-  return hasMonth ? monthFormatter.format(date) : String(date.getUTCFullYear());
+  if (!hasMonth) return String(date.getUTCFullYear());
+  return new Intl.DateTimeFormat(locale, {
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
 }
 
 /**
  * `"Sep 2021 – Jun 2026"`, `"Jan 2025 – Present"` when there is no end, or a single date
  * when the period starts and ends at the same time (`"Jun 2022"`).
  */
-export function formatPeriod(start: string, end?: string): string {
-  if (end === start) return formatCvDate(start);
-  return `${formatCvDate(start)} – ${end ? formatCvDate(end) : 'Present'}`;
+export function formatPeriod(start: string, end: string | undefined, locale: Locale): string {
+  if (end === start) return formatCvDate(start, locale);
+  const to = end ? formatCvDate(end, locale) : ui(locale).cv.present;
+  return `${formatCvDate(start, locale)} – ${to}`;
 }
 
 /** Newest first: current entries (no end) on top, then by end date, then by start date. */

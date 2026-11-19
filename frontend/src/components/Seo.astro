@@ -1,7 +1,15 @@
 ---
+import {
+  alternatePath,
+  DEFAULT_LOCALE,
+  LOCALE_META,
+  LOCALES,
+  type Locale,
+} from '../lib/i18n/locales';
 import { buildCanonicalUrl, buildPageTitle } from '../lib/seo';
 
 interface Props {
+  locale: Locale;
   siteName: string;
   description: string;
   title?: string | undefined;
@@ -9,27 +17,41 @@ interface Props {
   noindex?: boolean | undefined;
 }
 
-const { siteName, description, title, ogType = 'website', noindex = false } = Astro.props;
+const { locale, siteName, description, title, ogType = 'website', noindex = false } = Astro.props;
 
 if (!Astro.site) {
   throw new Error('`site` must be set in astro.config.mjs (SITE_URL env var).');
 }
 
+const site = Astro.site;
+const pathname = Astro.url.pathname;
 const fullTitle = buildPageTitle(title, siteName);
-const canonical = buildCanonicalUrl(Astro.url.pathname, Astro.site);
+const canonical = buildCanonicalUrl(pathname, site);
+const alternates = LOCALES.map((alternate) => ({
+  hreflang: alternate,
+  href: buildCanonicalUrl(alternatePath(pathname, alternate), site),
+}));
+const defaultHref = buildCanonicalUrl(alternatePath(pathname, DEFAULT_LOCALE), site);
 ---
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex" />}
+{alternates.map((alternate) => (
+  <link rel="alternate" hreflang={alternate.hreflang} href={alternate.href} />
+))}
+<link rel="alternate" hreflang="x-default" href={defaultHref} />
 
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={siteName} />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
-<meta property="og:locale" content="en" />
+<meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
+{LOCALES.filter((other) => other !== locale).map((other) => (
+  <meta property="og:locale:alternate" content={LOCALE_META[other].ogLocale} />
+))}
 <meta name="twitter:card" content="summary" />
 
 <link rel="sitemap" href="/sitemap.xml" />

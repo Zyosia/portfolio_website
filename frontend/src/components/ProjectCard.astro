@@ -1,12 +1,14 @@
 ---
-import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 
+import type { LocalizedProject } from '../lib/content';
+import { localizePath } from '../lib/i18n/locales';
+import { ui } from '../lib/i18n/ui';
 import { formatMonthYear } from '../lib/projects';
 import TagList from './TagList.astro';
 
 interface Props {
-  project: CollectionEntry<'projects'>;
+  project: LocalizedProject;
   /** Heading level depends on the surrounding page outline. */
   headingLevel?: 'h2' | 'h3';
   /** Eager-load the cover of cards visible on first paint. */
@@ -15,7 +17,9 @@ interface Props {
 
 const { project, headingLevel: Heading = 'h3', eager = false } = Astro.props;
 const { title, summary, date, tags, cover, coverAlt, draft } = project.data;
-const href = `/projects/${project.id}`;
+const { locale, slug } = project;
+const t = ui(locale).projects;
+const href = localizePath(`/projects/${slug}`, locale);
 ---
 
 <article class="group relative flex h-full flex-col overflow-hidden rounded-(--radius-card) border border-border bg-surface transition-colors focus-within:border-accent hover:border-accent">
@@ -29,8 +33,8 @@ const href = `/projects/${project.id}`;
   />
   <div class="flex flex-1 flex-col gap-3 p-5">
     <p class="font-mono text-xs text-muted">
-      <time datetime={date.toISOString()}>{formatMonthYear(date)}</time>
-      {draft && <span class="ml-2 text-danger">draft</span>}
+      <time datetime={date.toISOString()}>{formatMonthYear(date, locale)}</time>
+      {draft && <span class="ml-2 text-danger">{t.draft}</span>}
     </p>
     <Heading class="text-lg leading-snug font-semibold">
       <!-- Stretched link: the whole card is clickable, but only the title is announced. -->
@@ -39,6 +43,6 @@ const href = `/projects/${project.id}`;
       </a>
     </Heading>
     <p class="flex-1 text-sm text-muted">{summary}</p>
-    <TagList tags={tags} label={`Tags of ${title}`} />
+    <TagList tags={tags} label={t.tagsOf(title)} />
   </div>
 </article>

@@ -1,49 +1,96 @@
-# Site owner identity. Validated by `profileSchema` in src/lib/schemas.ts.
-# Source: CV (French), translated. Pitch and bio are drafts to fine-tune.
-main:
+# Site owner identity, one entry per locale (en, fr). Validated by `profileSchema` in
+# src/lib/schemas.ts. Sources: public/cv-en.pdf and public/cv-fr.pdf. Pitch and bio are drafts.
+# TODO(content): add a photo (square JPG/PNG/WebP, at least 800x800) in src/assets/ and set
+# `photo: ../assets/profile.jpg` and `photoAlt` in both entries.
+
+en:
   name: Naël Charvet
   jobTitle: Software Engineer, Software Development & AI
   location: Paris, France
   pitch: >-
-    Software engineer specialised in software development and AI, with hands-on experience in
-    full-stack development and RAG systems. I care about robust software architecture and
-    concrete, useful applications of AI.
+    Software engineer focused on software development and AI, with experience in full-stack
+    development and RAG systems. Driven by robust software design and real-world uses of AI.
   description: >-
-    Naël Charvet, software engineer in Paris specialised in software development and AI:
+    Naël Charvet, software engineer in Paris focused on software development and AI:
     full-stack, RAG systems, projects, CV and contact.
-  # TODO(content): add a photo (square JPG/PNG/WebP, at least 800x800) in src/assets/ and set:
-  # photo: ../assets/profile.jpg
-  # photoAlt: Portrait of Naël Charvet
   bio:
     - >-
-      I am a software engineer with an engineering degree in computer science from ESIEE Paris
-      (2023–2026), which included an academic exchange at Heriot-Watt University in 2025. I
-      specialise in software development and artificial intelligence.
+      I am a software engineer with an MEng in Computer Science from ESIEE Paris (2023–2026),
+      including an exchange semester at Heriot-Watt University in 2025. I focus on software
+      development and artificial intelligence.
     - >-
-      During my final-year internship at EDZO, I built full-stack features for a SaaS platform
-      with Python, FastAPI and React, and designed a dashboard analysing the usage and costs of
-      AI models from BigQuery data. Before that, at e-Science Data Factory, I developed a RAG
-      pipeline combining OCR, embeddings and vector databases, a reporting system based on
-      knowledge graphs (OWL, RDF, SPARQL), and MCP servers deployed with Docker.
+      During my final-year internship at EDZO, I developed full-stack features for a SaaS
+      platform with Python, FastAPI and React, and designed a dashboard analysing the usage and
+      costs of AI models from BigQuery data. Before that, at e-Science Data Factory, I built a
+      RAG pipeline integrating OCR, embeddings and vector databases, designed a reporting
+      system with OWL, RDF and SPARQL, and developed MCP servers deployed with Docker.
     - >-
-      I care about robust software architecture and concrete applications of AI. Outside work,
-      I enjoy chess and strategy games, table tennis, which I played for five years, computer
-      hardware, and building games and software.
-    - I am available immediately for a permanent or fixed-term position.
+      I am driven by robust software design and real-world uses of AI. Outside work, I enjoy
+      chess and strategy games, table tennis, which I played for five years, computing and
+      hardware, and game and software development.
+    - I am available now for a permanent or fixed-term role.
   interests:
     - title: Software development
       description: >-
-        Robust, well-structured applications, from Python and FastAPI backends to React
-        frontends, and side projects such as a Rust game engine for a strategy-game competition
-        platform.
+        Robust, well-designed applications, from Python and FastAPI backends to React
+        frontends, and side projects such as a Rust game engine for a strategy-game
+        competition platform.
     - title: Artificial intelligence
       description: >-
-        Practical AI: retrieval-augmented generation with embeddings and vector databases,
+        Real-world AI: retrieval-augmented generation with embeddings and vector databases,
         Graph-RAG, and computer vision with deep learning frameworks such as PyTorch.
     - title: DevOps
       description: >-
         Containerised services with Docker, Git and GitHub workflows, and automation of
         business processes and data processing.
+  links:
+    github: https://github.com/Zyosia
+    linkedin: https://www.linkedin.com/in/na%C3%ABl-charvet-205b6a201
+
+fr:
+  name: Naël Charvet
+  jobTitle: Ingénieur informatique, Développement logiciel & IA
+  location: Paris, Île-de-France
+  pitch: >-
+    Ingénieur en informatique spécialisé en développement logiciel et en IA, avec une
+    expérience en développement full-stack et systèmes RAG. Attaché aux architectures
+    logicielles robustes et aux applications concrètes de l’IA.
+  description: >-
+    Naël Charvet, ingénieur informatique à Paris spécialisé en développement logiciel et IA :
+    full-stack, systèmes RAG, projets, CV et contact.
+  bio:
+    - >-
+      Je suis ingénieur en informatique, diplômé d’ESIEE Paris (2023–2026), avec un échange
+      universitaire à la Heriot-Watt University en 2025. Je suis spécialisé en développement
+      logiciel et en intelligence artificielle.
+    - >-
+      Lors de mon stage de fin d’études chez EDZO, j’ai développé des fonctionnalités full-stack
+      sur une plateforme SaaS avec Python, FastAPI et React, et conçu un dashboard analysant la
+      consommation et les coûts des modèles d’IA à partir de données BigQuery. Auparavant, chez
+      e-Science Data Factory, j’ai développé un pipeline RAG intégrant OCR, embeddings et bases
+      de données vectorielles, mis en place un système de reporting basé sur OWL, RDF et
+      SPARQL, et développé des serveurs MCP déployés avec Docker.
+    - >-
+      Je suis attaché aux architectures logicielles robustes et aux applications concrètes de
+      l’IA. En dehors du travail, j’apprécie les échecs et les jeux de stratégie, le tennis de
+      table, que j’ai pratiqué pendant cinq ans, l’informatique et le hardware, ainsi que le
+      développement de jeux et de logiciels.
+    - Je suis disponible immédiatement, en CDI ou CDD.
+  interests:
+    - title: Développement logiciel
+      description: >-
+        Des applications robustes et bien conçues, des backends Python et FastAPI aux
+        interfaces React, et des projets personnels comme un moteur de jeu en Rust pour une
+        plateforme de compétition.
+    - title: Intelligence artificielle
+      description: >-
+        L’IA appliquée : génération augmentée par la recherche (RAG) avec embeddings et bases
+        vectorielles, Graph-RAG, et vision par ordinateur avec des frameworks de deep learning
+        comme PyTorch.
+    - title: DevOps
+      description: >-
+        Services conteneurisés avec Docker, workflows Git et GitHub, et automatisation de
+        processus métier et de traitements de données.
   links:
     github: https://github.com/Zyosia
     linkedin: https://www.linkedin.com/in/na%C3%ABl-charvet-205b6a201

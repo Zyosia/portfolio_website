@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { localizePath, type Locale } from '../../lib/i18n/locales';
+import { ui } from '../../lib/i18n/ui';
+import ButtonLink from '../ButtonLink.astro';
+import PageHeader from '../PageHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale).notFound;
+---
+
+<BaseLayout locale={locale} title={t.title} noindex>
+  <PageHeader title={t.heading} path="~/nowhere" lead={t.lead} />
+  <pre
+    class="max-w-(--container-prose) overflow-x-auto rounded-(--radius-card) border border-border bg-surface-muted p-4 font-mono text-sm text-muted"
+    aria-hidden="true"
+  >bash: cd: no such file or directory</pre>
+  <div class="mt-8 flex flex-wrap gap-3">
+    <ButtonLink href={localizePath('/', locale)}>{t.home}</ButtonLink>
+    <ButtonLink href={localizePath('/projects', locale)} variant="secondary">
+      {t.projects}
+    </ButtonLink>
+  </div>
+</BaseLayout>

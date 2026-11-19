@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   collectTags,
   filterPublished,
+  findMissingTranslations,
   formatMonthYear,
+  parseProjectId,
   selectFeatured,
   sortByDateDesc,
   tagSlug,
@@ -82,6 +84,27 @@ describe('tagSlug', () => {
 
 describe('formatMonthYear', () => {
   it('formats in UTC regardless of the local time zone', () => {
-    expect(formatMonthYear(new Date('2026-06-01T00:00:00Z'))).toBe('June 2026');
+    expect(formatMonthYear(new Date('2026-06-01T00:00:00Z'), 'en')).toBe('June 2026');
+    expect(formatMonthYear(new Date('2026-06-01T00:00:00Z'), 'fr')).toBe('juin 2026');
+  });
+});
+
+describe('parseProjectId', () => {
+  it('splits the locale folder from the slug', () => {
+    expect(parseProjectId('fr/my-app')).toEqual({ locale: 'fr', slug: 'my-app' });
+  });
+
+  it.each(['my-app', 'de/my-app', 'en/'])('rejects %j', (id) => {
+    expect(() => parseProjectId(id)).toThrow('locale folder');
+  });
+});
+
+describe('findMissingTranslations', () => {
+  it('reports slugs missing in a locale', () => {
+    expect(findMissingTranslations(['en/a', 'fr/a', 'en/b', 'fr/c'])).toEqual(['en/c', 'fr/b']);
+  });
+
+  it('is empty when every project exists in every locale', () => {
+    expect(findMissingTranslations(['en/a', 'fr/a'])).toEqual([]);
   });
 });

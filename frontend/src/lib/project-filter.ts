@@ -1,3 +1,6 @@
+import { clientStrings } from './i18n/client-strings';
+import type { Locale } from './i18n/locales';
+
 /*
  * Pure logic of the projects tag filter. The DOM wiring lives in
  * src/scripts/project-filter.ts.
@@ -26,9 +29,10 @@ export function matchesTag(projectTags: readonly string[], selected: string | nu
 }
 
 /** Text announced to screen readers after filtering. */
-export function describeResults(visible: number, selectedLabel: string | null): string {
-  const noun = visible === 1 ? 'project' : 'projects';
-  return selectedLabel === null
-    ? `Showing all ${visible} ${noun}`
-    : `Showing ${visible} ${noun} tagged ${selectedLabel}`;
+export function describeResults(
+  visible: number,
+  selectedLabel: string | null,
+  locale: Locale,
+): string {
+  return clientStrings(locale).filter.results(visible, selectedLabel);
 }

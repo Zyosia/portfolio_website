@@ -55,8 +55,11 @@
 		file_server
 	}
 
+	# Not-found page in the language of the requested URL.
 	handle_errors 404 {
 		root * /srv
+		@french path /fr /fr/*
+		rewrite @french /fr/404.html
 		rewrite * /404.html
 		file_server
 	}

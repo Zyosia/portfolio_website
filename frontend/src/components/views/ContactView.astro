@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProfile } from '../../lib/content';
+import type { Locale } from '../../lib/i18n/locales';
+import { ui } from '../../lib/i18n/ui';
+import ContactForm from '../ContactForm.astro';
+import PageHeader from '../PageHeader.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale).contact;
+const profile = await getProfile(locale);
+const elsewhere = [
+  { label: 'LinkedIn', href: profile.links.linkedin, hint: t.linkedinHint },
+  { label: 'GitHub', href: profile.links.github, hint: t.githubHint },
+];
+---
+
+<BaseLayout locale={locale} title={t.title} description={t.description(profile.name)}>
+  <PageHeader title={t.title} path="~/contact" lead={t.lead} />
+
+  <div class="grid gap-12 lg:grid-cols-[1fr_18rem]">
+    <ContactForm locale={locale} />
+
+    <aside aria-labelledby="elsewhere-title">
+      <h2 id="elsewhere-title" class="font-mono text-sm text-accent">
+        {t.elsewhere}
+      </h2>
+      <ul class="mt-4 space-y-3">
+        {elsewhere.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              rel="me"
+              class="group block rounded-(--radius-card) border border-border bg-surface p-4 transition-colors hover:border-accent"
+            >
+              <span class="font-semibold group-hover:text-accent">{link.label}</span>
+              <span class="block text-sm text-muted">{link.hint}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  </div>
+</BaseLayout>

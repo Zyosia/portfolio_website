@@ -1,3 +1,6 @@
+import { clientStrings } from './i18n/client-strings';
+import type { Locale } from './i18n/locales';
+
 /** Colour themes supported by the site. */
 export type Theme = 'light' | 'dark';
 
@@ -19,6 +22,6 @@ export function oppositeTheme(theme: Theme): Theme {
 }
 
 /** Accessible label of the toggle: it names the action, not the current state. */
-export function toggleLabel(current: Theme): string {
-  return `Switch to ${oppositeTheme(current)} theme`;
+export function toggleLabel(current: Theme, locale: Locale): string {
+  return clientStrings(locale).theme.switchTo(oppositeTheme(current));
 }

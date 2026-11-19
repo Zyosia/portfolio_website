@@ -1,10 +1,16 @@
 import { submitContact } from '../lib/contact-api';
 import {
+  fieldErrorMessage,
   validateContact,
   type ContactField,
   type ContactValues,
   type FieldErrors,
 } from '../lib/contact-validation';
+import { clientStrings } from '../lib/i18n/client-strings';
+import { parseLocale } from '../lib/i18n/locales';
+
+const locale = parseLocale(document.documentElement.lang);
+const strings = clientStrings(locale).contact;
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -37,7 +43,10 @@ function setFieldError(form: HTMLFormElement, field: ContactField, error?: strin
 }
 
 function showFieldErrors(form: HTMLFormElement, errors: FieldErrors): void {
-  for (const field of FIELDS) setFieldError(form, field, errors[field]);
+  for (const field of FIELDS) {
+    const code = errors[field];
+    setFieldError(form, field, code && fieldErrorMessage(field, code, locale));
+  }
 }
 
 function isContactField(value: string | null): value is ContactField {
@@ -63,7 +72,7 @@ function initContactForm(form: HTMLFormElement): void {
     form.setAttribute('aria-busy', String(state === 'submitting'));
     if (submit) {
       submit.disabled = state === 'submitting';
-      submit.textContent = state === 'submitting' ? 'Sending…' : submitLabel;
+      submit.textContent = state === 'submitting' ? strings.sendingButton : submitLabel;
     }
     if (status) {
       status.textContent = message;
@@ -89,18 +98,18 @@ function initContactForm(form: HTMLFormElement): void {
     const errors = validateContact(values);
     showFieldErrors(form, errors);
     if (Object.keys(errors).length > 0) {
-      setState('error', 'Please correct the highlighted fields.');
+      setState('error', strings.correctFields);
       focusFirstInvalid(form, errors);
       return;
     }
 
-    setState('submitting', 'Sending your message…');
+    setState('submitting', strings.sending);
     const result = await submitContact(values);
     if (result.ok) {
       form.reset();
-      setState('success', 'Thank you! Your message has been sent. I will get back to you soon.');
+      setState('success', strings.success);
     } else {
-      setState('error', result.message);
+      setState('error', strings.failures[result.reason]);
     }
   });
 

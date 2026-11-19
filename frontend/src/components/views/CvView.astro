@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCv, getProfile } from '../../lib/content';
+import { formatCvDate, formatPeriod, sortByPeriodDesc } from '../../lib/cv';
+import { LOCALE_META, LOCALES, type Locale } from '../../lib/i18n/locales';
+import { ui } from '../../lib/i18n/ui';
+import ButtonLink from '../ButtonLink.astro';
+import PageHeader from '../PageHeader.astro';
+import SectionHeading from '../SectionHeading.astro';
+import SkillGroups from '../SkillGroups.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = ui(locale).cv;
+const [profile, cv] = await Promise.all([getProfile(locale), getCv(locale)]);
+const experience = sortByPeriodDesc(cv.experience);
+const education = sortByPeriodDesc(cv.education);
+// The PDF in the other languages, offered as a secondary download.
+const otherPdfs = await Promise.all(
+  LOCALES.filter((other) => other !== locale).map(async (other) => ({
+    locale: other,
+    href: (await getCv(other)).pdf,
+  })),
+);
+---
+
+<BaseLayout locale={locale} title={t.title} description={t.description(profile.name)}>
+  <PageHeader title={t.heading} path="~/cv" lead={`${profile.jobTitle} · ${profile.location}`}>
+    <div class="mt-8 flex flex-wrap gap-3 print:hidden">
+      <ButtonLink href={cv.pdf} download hreflang={locale}>
+        {t.downloadPdf}
+      </ButtonLink>
+      {otherPdfs.map((pdf) => (
+        <ButtonLink
+          href={pdf.href}
+          download
+          hreflang={pdf.locale}
+          lang={pdf.locale}
+          variant="secondary"
+        >
+          {LOCALE_META[pdf.locale].nativeName} (PDF)
+        </ButtonLink>
+      ))}
+    </div>
+  </PageHeader>
+
+  <div class="space-y-16">
+    <section aria-labelledby="experience-title">
+      <SectionHeading index="01" title={t.experience} id="experience-title" />
+      <ol class="space-y-10">
+        {experience.map((job) => (
+          <li class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
+            <p class="font-mono text-sm text-muted">{formatPeriod(job.start, job.end, locale)}</p>
+            <div>
+              <h3 class="text-lg font-semibold">
+                {job.role} <span class="text-muted">· {job.organization}</span>
+              </h3>
+              {job.location && <p class="text-sm text-muted">{job.location}</p>}
+              {job.highlights.length > 0 && (
+                <ul class="mt-3 list-disc space-y-1 pl-5">
+                  {job.highlights.map((highlight) => (
+                    <li>{highlight}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section aria-labelledby="education-title">
+      <SectionHeading index="02" title={t.education} id="education-title" />
+      <ol class="space-y-10">
+        {education.map((school) => (
+          <li class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
+            <p class="font-mono text-sm text-muted">
+              {formatPeriod(school.start, school.end, locale)}
+            </p>
+            <div>
+              <h3 class="text-lg font-semibold">
+                {school.degree} <span class="text-muted">· {school.institution}</span>
+              </h3>
+              {school.location && <p class="text-sm text-muted">{school.location}</p>}
+              {school.details.length > 0 && (
+                <ul class="mt-3 list-disc space-y-1 pl-5">
+                  {school.details.map((detail) => (
+                    <li>{detail}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section aria-labelledby="cv-skills-title">
+      <SectionHeading index="03" title={t.skills} id="cv-skills-title" />
+      <SkillGroups groups={cv.skills} />
+    </section>
+
+    <div class="grid gap-16 md:grid-cols-2">
+      <section aria-labelledby="languages-title">
+        <SectionHeading index="04" title={t.languages} id="languages-title" />
+        <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
+          {cv.languages.map((language) => (
+            <>
+              <dt class="font-semibold">{language.name}</dt>
+              <dd class="text-muted">{language.level}</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+
+      {cv.certifications.length > 0 && (
+        <section aria-labelledby="certifications-title">
+          <SectionHeading index="05" title={t.certifications} id="certifications-title" />
+          <ul class="space-y-3">
+            {cv.certifications.map((certification) => (
+              <li>
+                <p class="font-semibold">
+                  {certification.url ? (
+                    <a href={certification.url} class="hover:text-accent">
+                      {certification.name}
+                    </a>
+                  ) : (
+                    certification.name
+                  )}
+                </p>
+                <p class="text-sm text-muted">
+                  {certification.issuer} · {formatCvDate(certification.date, locale)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  </div>
+</BaseLayout>

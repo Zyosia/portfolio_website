@@ -1,15 +1,23 @@
 ---
+import type { Locale } from '../lib/i18n/locales';
+import { ui } from '../lib/i18n/ui';
+
 /*
  * Hidden until its script runs: without JavaScript the site simply follows the
  * system theme, and a button that does nothing would be misleading.
  */
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
 ---
 
 <button
   type="button"
   data-theme-toggle
   hidden
-  aria-label="Toggle colour theme"
+  aria-label={ui(locale).theme.toggle}
   class="inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-muted hover:text-fg"
 >
   <!-- Sun, shown in dark mode (action: go light) -->

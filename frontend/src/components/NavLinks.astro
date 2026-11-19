@@ -1,23 +1,27 @@
 ---
+import { localizePath, stripLocale, type Locale } from '../lib/i18n/locales';
+import { ui } from '../lib/i18n/ui';
 import { NAV_ITEMS } from '../lib/navigation';
 import { isActivePath } from '../lib/paths';
 
 interface Props {
+  locale: Locale;
   /** `row` for the desktop bar, `column` for the mobile menu. */
   layout: 'row' | 'column';
 }
 
-const { layout } = Astro.props;
-const currentPath = Astro.url.pathname;
+const { locale, layout } = Astro.props;
+const currentPath = stripLocale(Astro.url.pathname);
+const labels = ui(locale).nav;
 ---
 
 <ul class:list={['flex', layout === 'row' ? 'items-center gap-1' : 'flex-col gap-1']}>
   {NAV_ITEMS.map((item) => {
-    const active = isActivePath(currentPath, item.href);
+    const active = isActivePath(currentPath, item.path);
     return (
       <li>
         <a
-          href={item.href}
+          href={localizePath(item.path, locale)}
           aria-current={active ? 'page' : undefined}
           class:list={[
             'block rounded-md px-3 py-2 font-mono text-sm transition-colors',
@@ -27,7 +31,7 @@ const currentPath = Astro.url.pathname;
           <span aria-hidden="true" class:list={[active ? 'text-accent' : 'text-transparent']}>
             ./
           </span>
-          {item.label.toLowerCase()}
+          {labels[item.labelKey].toLocaleLowerCase(locale)}
         </a>
       </li>
     );
