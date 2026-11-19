@@ -7,33 +7,42 @@ import { z } from 'astro/zod';
  * on the first invalid one.
  */
 
-/** Month precision is enough for a CV and avoids fake day-level accuracy: `2024-09`. */
-const yearMonth = z
+/**
+ * CV dates: `2024-09`, or `2024` when only the year is known. Month precision is enough
+ * for a CV and avoids fake day-level accuracy.
+ */
+const cvDate = z
   .string()
-  .regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Expected a year and month formatted as YYYY-MM');
+  .regex(/^\d{4}(-(0[1-9]|1[0-2]))?$/, 'Expected a date formatted as YYYY-MM or YYYY');
 
 const nonEmpty = z.string().trim().min(1);
 
 export const profileSchema = (image: ImageFunction) =>
-  z.object({
-    name: nonEmpty,
-    jobTitle: nonEmpty,
-    location: nonEmpty,
-    pitch: nonEmpty,
-    /** Default meta description for pages that do not define their own. */
-    description: z.string().min(50).max(160),
-    photo: image(),
-    photoAlt: nonEmpty,
-    /** About page paragraphs, in order. */
-    bio: z.array(nonEmpty).min(1),
-    interests: z.array(z.object({ title: nonEmpty, description: nonEmpty })).min(1),
-    links: z.object({
-      github: z.url(),
-      linkedin: z.url(),
-      /** Source code of this website, shown in the footer. */
-      sourceRepository: z.url().optional(),
-    }),
-  });
+  z
+    .object({
+      name: nonEmpty,
+      jobTitle: nonEmpty,
+      location: nonEmpty,
+      pitch: nonEmpty,
+      /** Default meta description for pages that do not define their own. */
+      description: z.string().min(50).max(160),
+      /** Optional: the About page shows the initials until a photo is provided. */
+      photo: image().optional(),
+      photoAlt: nonEmpty.optional(),
+      /** About page paragraphs, in order. */
+      bio: z.array(nonEmpty).min(1),
+      interests: z.array(z.object({ title: nonEmpty, description: nonEmpty })).min(1),
+      links: z.object({
+        github: z.url(),
+        linkedin: z.url(),
+        /** Source code of this website, shown in the footer. */
+        sourceRepository: z.url().optional(),
+      }),
+    })
+    .refine((profile) => !profile.photo || profile.photoAlt, {
+      message: 'photoAlt is required when a photo is set',
+      path: ['photoAlt'],
+    });
 
 export const projectSchema = (image: ImageFunction) =>
   z.object({
@@ -58,14 +67,18 @@ const skillGroupSchema = z.object({
 });
 
 export const cvSchema = z.object({
+  /** Language of public/cv.pdf, as a BCP 47 tag, when it differs from the site (English). */
+  pdfLanguage: z
+    .object({ tag: z.string().regex(/^[a-z]{2,3}(-[A-Za-z0-9]+)*$/), label: nonEmpty })
+    .optional(),
   experience: z.array(
     z.object({
       role: nonEmpty,
       organization: nonEmpty,
       location: nonEmpty.optional(),
-      start: yearMonth,
+      start: cvDate,
       /** Omitted for the current position. */
-      end: yearMonth.optional(),
+      end: cvDate.optional(),
       highlights: z.array(nonEmpty).default([]),
     }),
   ),
@@ -74,8 +87,8 @@ export const cvSchema = z.object({
       degree: nonEmpty,
       institution: nonEmpty,
       location: nonEmpty.optional(),
-      start: yearMonth,
-      end: yearMonth.optional(),
+      start: cvDate,
+      end: cvDate.optional(),
       details: z.array(nonEmpty).default([]),
     }),
   ),
@@ -85,7 +98,7 @@ export const cvSchema = z.object({
     z.object({
       name: nonEmpty,
       issuer: nonEmpty,
-      date: yearMonth,
+      date: cvDate,
       url: z.url().optional(),
     }),
   ),

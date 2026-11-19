@@ -54,7 +54,7 @@ test.describe('projects', () => {
 test.describe('CV', () => {
   test('offers the PDF download', async ({ page, request }) => {
     await page.goto('/cv');
-    const link = page.getByRole('link', { name: 'Download PDF' });
+    const link = page.getByRole('link', { name: /^Download PDF/ });
     await expect(link).toHaveAttribute('href', '/cv.pdf');
 
     const pdf = await request.get('/cv.pdf');
@@ -67,7 +67,7 @@ test.describe('CV', () => {
     await page.emulateMedia({ media: 'print' });
     await expect(page.locator('body > header')).toBeHidden();
     await expect(page.locator('body > footer')).toBeHidden();
-    await expect(page.getByRole('link', { name: 'Download PDF' })).toBeHidden();
+    await expect(page.getByRole('link', { name: /^Download PDF/ })).toBeHidden();
     await expect(page.getByRole('heading', { name: /Experience/ })).toBeVisible();
   });
 });

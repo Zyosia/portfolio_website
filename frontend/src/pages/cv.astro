@@ -5,7 +5,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import SkillGroups from '../components/SkillGroups.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCv, getProfile } from '../lib/content';
-import { formatPeriod, formatYearMonth, sortByPeriodDesc } from '../lib/cv';
+import { formatCvDate, formatPeriod, sortByPeriodDesc } from '../lib/cv';
 
 const [profile, cv] = await Promise.all([getProfile(), getCv()]);
 const experience = sortByPeriodDesc(cv.experience);
@@ -22,8 +22,8 @@ const education = sortByPeriodDesc(cv.education);
     lead={`${profile.jobTitle} · ${profile.location}`}
   >
     <div class="mt-8 flex flex-wrap gap-3 print:hidden">
-      <ButtonLink href="/cv.pdf" download>
-        Download PDF
+      <ButtonLink href="/cv.pdf" download hreflang={cv.pdfLanguage?.tag}>
+        Download PDF{cv.pdfLanguage && ` (${cv.pdfLanguage.label})`}
       </ButtonLink>
     </div>
   </PageHeader>
@@ -111,7 +111,7 @@ const education = sortByPeriodDesc(cv.education);
                   )}
                 </p>
                 <p class="text-sm text-muted">
-                  {certification.issuer} · {formatYearMonth(certification.date)}
+                  {certification.issuer} · {formatCvDate(certification.date)}
                 </p>
               </li>
             ))}

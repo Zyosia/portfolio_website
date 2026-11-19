@@ -1,31 +1,49 @@
 # Site owner identity. Validated by `profileSchema` in src/lib/schemas.ts.
-# TODO(content): replace every placeholder value below with real information.
+# Source: CV (French), translated. Pitch and bio are drafts to fine-tune.
 main:
-  name: Your Name
-  jobTitle: Software Engineer
-  location: City, Country
+  name: Naël Charvet
+  jobTitle: Software Engineer, Software Development & AI
+  location: Paris, France
   pitch: >-
-    TODO(content) One or two sentences about what you build and what you care about.
+    Software engineer specialised in software development and AI, with hands-on experience in
+    full-stack development and RAG systems. I care about robust software architecture and
+    concrete, useful applications of AI.
   description: >-
-    TODO(content) Portfolio of a software engineer: projects, CV and contact. Replace with
-    a 50 to 160 character description.
-  # TODO(content): replace with a real photo (JPG/PNG/WebP, square, at least 800x800).
-  photo: ../assets/profile-placeholder.svg
-  photoAlt: TODO(content) Portrait of Your Name
+    Naël Charvet, software engineer in Paris specialised in software development and AI:
+    full-stack, RAG systems, projects, CV and contact.
+  # TODO(content): add a photo (square JPG/PNG/WebP, at least 800x800) in src/assets/ and set:
+  # photo: ../assets/profile.jpg
+  # photoAlt: Portrait of Naël Charvet
   bio:
     - >-
-      TODO(content) First paragraph: who you are, where you are in your career and what you
-      are looking for.
+      I am a software engineer with an engineering degree in computer science from ESIEE Paris
+      (2023–2026), which included an academic exchange at Heriot-Watt University in 2025. I
+      specialise in software development and artificial intelligence.
     - >-
-      TODO(content) Second paragraph: how you work, what you have learned recently, what
-      drives you.
+      During my final-year internship at EDZO, I built full-stack features for a SaaS platform
+      with Python, FastAPI and React, and designed a dashboard analysing the usage and costs of
+      AI models from BigQuery data. Before that, at e-Science Data Factory, I developed a RAG
+      pipeline combining OCR, embeddings and vector databases, a reporting system based on
+      knowledge graphs (OWL, RDF, SPARQL), and MCP servers deployed with Docker.
+    - >-
+      I care about robust software architecture and concrete applications of AI. Outside work,
+      I enjoy chess and strategy games, table tennis, which I played for five years, computer
+      hardware, and building games and software.
+    - I am available immediately for a permanent or fixed-term position.
   interests:
     - title: Software development
-      description: TODO(content) What you enjoy building and the practices you care about.
+      description: >-
+        Robust, well-structured applications, from Python and FastAPI backends to React
+        frontends, and side projects such as a Rust game engine for a strategy-game competition
+        platform.
     - title: Artificial intelligence
-      description: TODO(content) Which AI topics you explore and how you apply them.
+      description: >-
+        Practical AI: retrieval-augmented generation with embeddings and vector databases,
+        Graph-RAG, and computer vision with deep learning frameworks such as PyTorch.
     - title: DevOps
-      description: TODO(content) How you approach automation, infrastructure and delivery.
+      description: >-
+        Containerised services with Docker, Git and GitHub workflows, and automation of
+        business processes and data processing.
   links:
-    github: https://github.com/your-username
-    linkedin: https://www.linkedin.com/in/your-username
+    github: https://github.com/Zyosia
+    linkedin: https://www.linkedin.com/in/na%C3%ABl-charvet-205b6a201

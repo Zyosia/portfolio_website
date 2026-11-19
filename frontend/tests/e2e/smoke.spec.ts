@@ -7,7 +7,7 @@ const PAGES = [
   { path: '/about', heading: 'About' },
   { path: '/cv', heading: 'Curriculum vitae' },
   { path: '/contact', heading: 'Contact' },
-  { path: '/projects/example-project-a', heading: /.+/ },
+  { path: '/projects/rust-ai-competition-platform', heading: /.+/ },
 ] as const;
 
 test.describe('every page', () => {

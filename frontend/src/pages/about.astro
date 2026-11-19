@@ -7,6 +7,7 @@ import SectionHeading from '../components/SectionHeading.astro';
 import SkillGroups from '../components/SkillGroups.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCv, getProfile } from '../lib/content';
+import { initials } from '../lib/text';
 
 const [profile, cv] = await Promise.all([getProfile(), getCv()]);
 ---
@@ -19,14 +20,23 @@ const [profile, cv] = await Promise.all([getProfile(), getCv()]);
   <PageHeader title="About" path="~/about" />
 
   <div class="grid items-start gap-10 md:grid-cols-[16rem_1fr] lg:gap-16">
-    <Image
-      src={profile.photo}
-      alt={profile.photoAlt}
-      widths={[256, 512]}
-      sizes="16rem"
-      loading="eager"
-      class="aspect-square w-48 rounded-(--radius-card) border border-border object-cover md:w-64"
-    />
+    {profile.photo ? (
+      <Image
+        src={profile.photo}
+        alt={profile.photoAlt ?? ''}
+        widths={[256, 512]}
+        sizes="16rem"
+        loading="eager"
+        class="aspect-square w-48 rounded-(--radius-card) border border-border object-cover md:w-64"
+      />
+    ) : (
+      <div
+        aria-hidden="true"
+        class="flex aspect-square w-48 items-center justify-center rounded-(--radius-card) border border-border bg-surface-muted font-mono text-5xl font-semibold text-accent md:w-64"
+      >
+        {initials(profile.name)}
+      </div>
+    )}
     <div class="max-w-(--container-prose) space-y-4 text-lg">
       {profile.bio.map((paragraph) => (
         <p>{paragraph}</p>

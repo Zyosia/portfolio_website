@@ -1,32 +1,83 @@
 # Structured CV. Validated by `cvSchema` in src/lib/schemas.ts.
-# Dates use the YYYY-MM format; omit `end` for a current position.
-# The skills below are also shown on the home and about pages.
-# TODO(content): replace every entry with real information, and public/cv.pdf with the real PDF.
+# Source: public/cv.pdf (French), translated. Dates: YYYY-MM, or YYYY when only the year is
+# known; omit `end` for a current position. Skills are also shown on the home and about pages.
 main:
+  pdfLanguage:
+    tag: fr
+    label: in French
+
   experience:
-    - role: TODO(content) Job title
-      organization: TODO(content) Company
-      location: City, Country
-      start: '2025-01'
+    - role: Software Engineer, final-year internship
+      organization: EDZO
+      start: '2026-04'
+      end: '2026-10'
       highlights:
-        - TODO(content) A concrete achievement, ideally with a measurable result.
-        - TODO(content) Another responsibility or achievement.
+        - Developed full-stack features for a SaaS platform with Python, FastAPI and React.
+        - Designed a dashboard analysing the usage and costs of AI models from BigQuery data.
+        - Developed and automated business processes and data processing.
+        - Maintained and improved the reliability of decision-support tools built with Google
+          Apps Script and Google Sheets.
+    - role: Software Engineer, internship
+      organization: e-Science Data Factory
+      start: '2025-05'
+      end: '2025-08'
+      highlights:
+        - Developed a RAG pipeline in Python integrating OCR, embeddings and vector databases.
+        - Built a reporting system based on OWL, RDF and SPARQL, and explored knowledge graphs.
+        - Developed MCP servers connected to Notion and deployed with Docker.
+        - Conducted a preliminary study of a Graph-RAG architecture applied to financial
+          reporting.
+    - role: IT Assistant, internship
+      organization: FD&Z
+      start: '2023-09'
+      end: '2023-11'
+      highlights:
+        - Developed internal tools and dashboards, automated business processes, and worked
+          with Visual Basic.
+    - role: Web Developer, internship
+      organization: Moloko SARL
+      start: '2022-06'
+      end: '2022-06'
+      highlights:
+        - Developed an e-commerce website and internal tools.
+
   education:
-    - degree: TODO(content) Engineering degree, major
-      institution: TODO(content) School
-      location: City, Country
-      start: '2021-09'
-      end: '2026-06'
+    - degree: Engineering degree (Diplôme d'ingénieur), Computer Science
+      institution: ESIEE Paris
+      start: '2023'
+      end: '2026'
       details:
-        - TODO(content) Relevant courses, final-year project or distinction.
+        - Academic exchange at Heriot-Watt University (2025).
+    - degree: Integrated preparatory classes
+      institution: ESIEE Paris
+      start: '2020'
+      end: '2023'
+    - degree: French Baccalauréat (general), with honours (mention Bien)
+      institution: Lycée St-Pierre-Fourrier
+      start: '2017'
+      end: '2020'
+
   skills:
-    - category: Software development
-      items: [TODO(content) Language, TODO(content) Framework]
-    - category: AI
-      items: [TODO(content) Library or technique]
-    - category: DevOps
-      items: [TODO(content) Tool, TODO(content) Platform]
+    - category: Programming languages
+      items: [Python, Rust, C, C++, Java, JavaScript, SQL]
+    - category: Backend & Web
+      items: [FastAPI, React, REST]
+    - category: AI & Data
+      items:
+        [Machine Learning, Computer Vision, RAG, Embeddings, PyTorch, Vector databases, BigQuery]
+    - category: DevOps & Tools
+      items: [Docker, Git, GitHub, Google Apps Script]
+    - category: Modelling
+      items: [UML, OWL, RDF, SPARQL]
+
   languages:
-    - name: TODO(content) Language
-      level: TODO(content) Level
+    - name: French
+      level: Native
+    - name: English
+      level: C1 (TOEIC 945)
+    - name: Spanish
+      level: B1
+    - name: Japanese
+      level: A2
+
   certifications: []

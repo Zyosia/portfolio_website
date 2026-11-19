@@ -58,11 +58,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # GHCR rejects uppercase repository names; the owner can contain capitals.
+      - name: Lowercase registry owner
+        id: owner
+        run: echo "name=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
       - name: Image metadata
         id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
-          images: ghcr.io/${{ github.repository_owner }}/portfolio-${{ matrix.service }}
+          images: ghcr.io/${{ steps.owner.outputs.name }}/portfolio-${{ matrix.service }}
           tags: |
             type=raw,value=${{ github.event.workflow_run.head_sha }}
             type=raw,value=latest
