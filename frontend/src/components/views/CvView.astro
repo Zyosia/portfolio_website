@@ -52,7 +52,7 @@ const otherPdfs = await Promise.all(
       <SectionHeading index="01" title={t.experience} id="experience-title" />
       <ol class="space-y-10">
         {experience.map((job) => (
-          <li class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
+          <li data-reveal class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
             <p class="font-mono text-sm text-muted">{formatPeriod(job.start, job.end, locale)}</p>
             <div>
               <h3 class="text-lg font-semibold">
@@ -76,7 +76,7 @@ const otherPdfs = await Promise.all(
       <SectionHeading index="02" title={t.education} id="education-title" />
       <ol class="space-y-10">
         {education.map((school) => (
-          <li class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
+          <li data-reveal class="grid gap-2 break-inside-avoid sm:grid-cols-[12rem_1fr] sm:gap-8">
             <p class="font-mono text-sm text-muted">
               {formatPeriod(school.start, school.end, locale)}
             </p>
@@ -106,7 +106,7 @@ const otherPdfs = await Promise.all(
     <div class="grid gap-16 md:grid-cols-2">
       <section aria-labelledby="languages-title">
         <SectionHeading index="04" title={t.languages} id="languages-title" />
-        <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
+        <dl data-reveal class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
           {cv.languages.map((language) => (
             <>
               <dt class="font-semibold">{language.name}</dt>
@@ -119,7 +119,7 @@ const otherPdfs = await Promise.all(
       {cv.certifications.length > 0 && (
         <section aria-labelledby="certifications-title">
           <SectionHeading index="05" title={t.certifications} id="certifications-title" />
-          <ul class="space-y-3">
+          <ul data-reveal class="space-y-3">
             {cv.certifications.map((certification) => (
               <li>
                 <p class="font-semibold">

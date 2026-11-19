@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('projects', () => {
   test('home page features projects linking to their detail page', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/en');
     const featured = page.getByRole('region', { name: /Featured projects/ });
     const firstCard = featured.getByRole('article').first();
     const title = await firstCard.getByRole('heading').innerText();
@@ -14,7 +14,7 @@ test.describe('projects', () => {
   });
 
   test('tag filter shows matching projects only and is shareable', async ({ page }) => {
-    await page.goto('/projects');
+    await page.goto('/en/projects');
     const cards = page.locator('[data-project-tags]');
     const total = await cards.count();
     const filter = page.getByRole('group', { name: 'Filter projects by tag' });
@@ -44,7 +44,7 @@ test.describe('projects', () => {
   }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
-    await page.goto('/projects?tag=ai');
+    await page.goto('/en/projects?tag=ai');
     await expect(page.getByRole('group', { name: 'Filter projects by tag' })).toBeHidden();
     await expect(page.locator('[data-project-tags]').first()).toBeVisible();
     await context.close();
@@ -53,7 +53,7 @@ test.describe('projects', () => {
 
 test.describe('CV', () => {
   test('offers the PDF download', async ({ page, request }) => {
-    await page.goto('/cv');
+    await page.goto('/en/cv');
     const link = page.getByRole('link', { name: /^Download PDF/ });
     await expect(link).toHaveAttribute('href', '/cv-en.pdf');
     await expect(page.getByRole('link', { name: 'Français (PDF)' })).toHaveAttribute(
@@ -67,7 +67,7 @@ test.describe('CV', () => {
   });
 
   test('print view hides the site chrome', async ({ page }) => {
-    await page.goto('/cv');
+    await page.goto('/en/cv');
     await page.emulateMedia({ media: 'print' });
     await expect(page.locator('body > header')).toBeHidden();
     await expect(page.locator('body > footer')).toBeHidden();

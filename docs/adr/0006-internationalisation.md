@@ -1,6 +1,6 @@
 # 0006. Internationalisation (English and French)
 
-- **Status**: Accepted
+- **Status**: Accepted; URL scheme superseded by [0007](0007-french-default-language.md)
 - **Date**: 2026-11-19
 
 ## Context

@@ -63,7 +63,7 @@ test('every page has complete metadata, unique within its language', async ({ pa
   for (const path of await sitemapPaths(request)) {
     await page.goto(path);
     const head = page.locator('head');
-    const locale = path === '/fr' || path.startsWith('/fr/') ? 'fr' : 'en';
+    const locale = path === '/en' || path.startsWith('/en/') ? 'en' : 'fr';
     const { titles, descriptions } = seen.get(locale) ?? {
       titles: new Set(),
       descriptions: new Set(),

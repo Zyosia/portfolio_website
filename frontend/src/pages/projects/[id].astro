@@ -5,7 +5,7 @@ import ProjectView from '../../components/views/ProjectView.astro';
 import { getProjects, type LocalizedProject } from '../../lib/content';
 
 export const getStaticPaths = (async () => {
-  const projects = await getProjects('en');
+  const projects = await getProjects('fr');
   return projects.map((project) => ({ params: { id: project.slug }, props: { project } }));
 }) satisfies GetStaticPaths;
 

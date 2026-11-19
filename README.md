@@ -24,8 +24,9 @@ vulnerability scanning, and architecture decision records.
 - **About** and **CV**: rendered from structured YAML; CV with PDF download and print stylesheet.
 - **Contact**: accessible form → FastAPI → transactional SMTP provider, with honeypot,
   per-IP rate limiting and announced loading/success/error states.
-- **Everywhere**: English and French (switch in the header, `/fr/...` URLs, `hreflang`),
-  responsive layout, light/dark theme (system default, remembered choice), SEO metadata,
+- **Everywhere**: French (default, at the root) and English (`/en/...` URLs), switch in the
+  header, `hreflang`; subtle motion (scroll reveal, typed home pitch, page cross-fade) that
+  is skipped under `prefers-reduced-motion`; responsive layout, light/dark theme (system default, remembered choice), SEO metadata,
   sitemap, robots.txt, strict Content Security Policy, localised 404 page.
 
 ## Architecture
@@ -116,7 +117,7 @@ Remaining placeholders are marked `TODO(content)`: `grep -rn "TODO(content)" fro
 | Interface labels (buttons, headings, messages) | `frontend/src/lib/i18n/ui.ts` and `client-strings.ts` |
 
 A project is one Markdown file per language; the file name is the URL slug, identical in both
-languages (`/projects/<slug>` and `/fr/projects/<slug>`). Front matter is validated at build
+languages (`/projects/<slug>` in French and `/en/projects/<slug>` in English). Front matter is validated at build
 time, and a project missing in one language fails the build with a clear message:
 
 ```markdown
@@ -172,7 +173,7 @@ The full procedure, from an empty VPS to rollback, is in
 │   ├── src/
 │   │   ├── components/       # UI components; views/ holds page bodies shared by locales
 │   │   ├── layouts/          # BaseLayout (head, theme, header, footer)
-│   │   ├── pages/            # thin routes (English at the root, French in fr/), sitemap, robots
+│   │   ├── pages/            # thin routes (French at the root, English in en/), sitemap, robots
 │   │   ├── content/          # profile.yaml, cv.yaml, projects/{en,fr}/*.md
 │   │   ├── lib/              # pure, unit-tested logic, Zod schemas, i18n/ (locales, strings)
 │   │   ├── scripts/          # small client scripts (theme, filter, contact form)

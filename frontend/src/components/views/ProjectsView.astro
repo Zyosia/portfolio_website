@@ -28,7 +28,7 @@ const tags = collectTags(projects);
       <ProjectFilter locale={locale} tags={tags} total={projects.length} />
       <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project, index) => (
-          <li data-project-tags={project.data.tags.map(tagSlug).join(' ')}>
+          <li data-reveal data-project-tags={project.data.tags.map(tagSlug).join(' ')}>
             <ProjectCard project={project} headingLevel="h2" eager={index < 3} />
           </li>
         ))}

@@ -3,16 +3,16 @@ import { expect, test } from '@playwright/test';
 
 const PAGES = [
   { path: '/', heading: /.+/ },
-  { path: '/projects', heading: 'Projects' },
-  { path: '/about', heading: 'About' },
+  { path: '/projects', heading: 'Projets' },
+  { path: '/about', heading: 'À propos' },
   { path: '/cv', heading: 'Curriculum vitae' },
   { path: '/contact', heading: 'Contact' },
   { path: '/projects/rust-ai-competition-platform', heading: /.+/ },
-  { path: '/fr', heading: /.+/ },
-  { path: '/fr/projects', heading: 'Projets' },
-  { path: '/fr/about', heading: 'À propos' },
-  { path: '/fr/cv', heading: 'Curriculum vitae' },
-  { path: '/fr/contact', heading: 'Contact' },
+  { path: '/en', heading: /.+/ },
+  { path: '/en/projects', heading: 'Projects' },
+  { path: '/en/about', heading: 'About' },
+  { path: '/en/cv', heading: 'Curriculum vitae' },
+  { path: '/en/contact', heading: 'Contact' },
 ] as const;
 
 test.describe('every page', () => {
@@ -45,24 +45,27 @@ test.describe('navigation', () => {
     page,
     isMobile,
   }) => {
-    await page.goto('/');
-    for (const label of ['projects', 'about', 'cv', 'contact']) {
+    await page.goto('/en');
+    const sections = [
+      { label: 'Projects', path: '/en/projects' },
+      { label: 'About', path: '/en/about' },
+      { label: 'CV', path: '/en/cv' },
+      { label: 'Contact', path: '/en/contact' },
+    ];
+    for (const { label, path } of sections) {
       if (isMobile) await page.locator('header summary').click();
       await page
         .getByRole('navigation', { name: 'Main' })
         .getByRole('link', { name: label, exact: true })
         .click();
-      await expect(page).toHaveURL(new RegExp(`/${label}$`));
-      await expect(page.locator('a[aria-current="page"]').first()).toHaveAttribute(
-        'href',
-        `/${label}`,
-      );
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page.locator('a[aria-current="page"]').first()).toHaveAttribute('href', path);
     }
   });
 
   test('skip link moves focus to the main content', async ({ page, isMobile }) => {
     test.skip(isMobile, 'Keyboard navigation is a desktop concern.');
-    await page.goto('/');
+    await page.goto('/en');
     await page.keyboard.press('Tab');
     const skipLink = page.getByRole('link', { name: 'Skip to content' });
     await expect(skipLink).toBeFocused();
@@ -82,7 +85,7 @@ test.describe('theme', () => {
 
   test('toggle switches the theme and remembers the choice', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
-    await page.goto('/');
+    await page.goto('/en');
     const html = page.locator('html');
     await expect(html).toHaveAttribute('data-theme', 'light');
 

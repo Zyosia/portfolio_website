@@ -22,7 +22,7 @@ const t = ui(locale).projects;
 const href = localizePath(`/projects/${slug}`, locale);
 ---
 
-<article class="group relative flex h-full flex-col overflow-hidden rounded-(--radius-card) border border-border bg-surface transition-colors focus-within:border-accent hover:border-accent">
+<article class="group relative flex h-full flex-col overflow-hidden rounded-(--radius-card) border border-border bg-surface transition duration-300 focus-within:border-accent hover:border-accent hover:shadow-lg motion-safe:hover:-translate-y-1">
   <Image
     src={cover}
     alt={coverAlt}

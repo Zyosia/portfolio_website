@@ -48,10 +48,11 @@ const { Content } = await render(project);
       widths={[640, 960, 1280]}
       sizes="(min-width: 1152px) 72rem, 100vw"
       loading="eager"
+      data-reveal
       class="aspect-video w-full rounded-(--radius-card) border border-border object-cover"
     />
 
-    <div class="mt-12 grid gap-12 lg:grid-cols-[1fr_16rem]">
+    <div data-reveal class="mt-12 grid gap-12 lg:grid-cols-[1fr_16rem]">
       <div class="prose-content">
         <Content />
       </div>

@@ -1,12 +1,13 @@
 # Site owner identity, one entry per locale (en, fr). Validated by `profileSchema` in
 # src/lib/schemas.ts. Sources: public/cv-en.pdf and public/cv-fr.pdf. Pitch and bio are drafts.
-# TODO(content): add a photo (square JPG/PNG/WebP, at least 800x800) in src/assets/ and set
-# `photo: ../assets/profile.jpg` and `photoAlt` in both entries.
+# Photo: square image in src/assets/; 800x800 or more keeps it sharp on high-density screens.
 
 en:
   name: Naël Charvet
   jobTitle: Software Engineer, Software Development & AI
   location: Paris, France
+  photo: ../assets/profile.jpg
+  photoAlt: Portrait of Naël Charvet, smiling, wearing round glasses and a dark shirt
   pitch: >-
     Software engineer focused on software development and AI, with experience in full-stack
     development and RAG systems. Driven by robust software design and real-world uses of AI.
@@ -51,6 +52,8 @@ fr:
   name: Naël Charvet
   jobTitle: Ingénieur informatique, Développement logiciel & IA
   location: Paris, Île-de-France
+  photo: ../assets/profile.jpg
+  photoAlt: Portrait de Naël Charvet, souriant, avec des lunettes rondes et une chemise sombre
   pitch: >-
     Ingénieur en informatique spécialisé en développement logiciel et en IA, avec une
     expérience en développement full-stack et systèmes RAG. Attaché aux architectures

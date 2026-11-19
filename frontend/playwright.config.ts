@@ -15,6 +15,9 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     trace: 'retain-on-failure',
+    // Decorative animations off by default, so audits (axe, screenshots) see the final
+    // state; tests/e2e/motion.spec.ts opts back in to cover them.
+    reducedMotion: 'reduce',
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },

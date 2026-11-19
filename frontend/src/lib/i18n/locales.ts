@@ -1,14 +1,14 @@
 import { normalizePath } from '../paths';
 
 /*
- * Supported languages and URL scheme. English, the default, lives at the root (`/about`);
- * every other locale is prefixed (`/fr/about`). Page slugs are identical in every locale,
+ * Supported languages and URL scheme. French, the default, lives at the root (`/about`);
+ * every other locale is prefixed (`/en/about`). Page slugs are identical in every locale,
  * so switching language only changes the prefix.
  */
 
-export const LOCALES = ['en', 'fr'] as const;
+export const LOCALES = ['fr', 'en'] as const;
 export type Locale = (typeof LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = 'en';
+export const DEFAULT_LOCALE: Locale = 'fr';
 
 export interface LocaleMeta {
   /** Name of the language in that language, for the switcher. */
@@ -39,13 +39,13 @@ function prefixOf(locale: Locale): string {
   return locale === DEFAULT_LOCALE ? '' : `/${locale}`;
 }
 
-/** Locale of a URL pathname: `/fr/about` → `fr`, `/about` → `en`. */
+/** Locale of a URL pathname: `/en/about` → `en`, `/about` → `fr`. */
 export function localeFromPath(pathname: string): Locale {
   const first = normalizePath(pathname).split('/')[1];
   return isLocale(first) && first !== DEFAULT_LOCALE ? first : DEFAULT_LOCALE;
 }
 
-/** Pathname without its locale prefix: `/fr/about` → `/about`, `/fr` → `/`. */
+/** Pathname without its locale prefix: `/en/about` → `/about`, `/en` → `/`. */
 export function stripLocale(pathname: string): string {
   const path = normalizePath(pathname);
   const locale = localeFromPath(path);
@@ -53,7 +53,7 @@ export function stripLocale(pathname: string): string {
   return normalizePath(path.slice(prefixOf(locale).length));
 }
 
-/** Locale-independent path → URL path in `locale`: `/about` → `/fr/about`, `/` → `/fr`. */
+/** Locale-independent path → URL path in `locale`: `/about` → `/en/about`, `/` → `/en`. */
 export function localizePath(path: string, locale: Locale): string {
   const base = normalizePath(path);
   const prefix = prefixOf(locale);

@@ -15,7 +15,7 @@ function json(route: Route, status: number, body: unknown): Promise<void> {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/contact');
+  await page.goto('/en/contact');
 });
 
 test('sends a valid message and announces success', async ({ page }) => {

@@ -8,6 +8,27 @@ import { parseLocale } from '../lib/i18n/locales';
 
 const locale = parseLocale(document.documentElement.lang);
 
+/**
+ * Runs a DOM update as a view transition, so cards fade out, fade in and slide to their new
+ * place instead of jumping. Falls back to an instant update when the browser lacks the API
+ * or the visitor prefers reduced motion. Cards are named only for the transition, so they
+ * are not captured individually when navigating to another page.
+ */
+function animate(cards: readonly HTMLElement[], update: () => void): void {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion || typeof document.startViewTransition !== 'function') {
+    update();
+    return;
+  }
+  cards.forEach((card, index) => {
+    card.style.viewTransitionName = `project-card-${index}`;
+  });
+  const transition = document.startViewTransition(update);
+  void transition.finished.finally(() => {
+    for (const card of cards) card.style.viewTransitionName = '';
+  });
+}
+
 /** `""` on the "All" button means "no tag selected". */
 function tagOf(button: HTMLButtonElement): string | null {
   return button.dataset['tag'] || null;
@@ -41,7 +62,7 @@ function initProjectFilter(root: HTMLElement): void {
   for (const button of buttons) {
     button.addEventListener('click', () => {
       const selected = tagOf(button);
-      applyFilter(selected, true);
+      animate(cards, () => applyFilter(selected, true));
       const search = buildTagSearch(window.location.search, selected);
       window.history.replaceState(null, '', `${window.location.pathname}${search}`);
     });

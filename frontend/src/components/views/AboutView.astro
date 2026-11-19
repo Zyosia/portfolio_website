@@ -28,12 +28,12 @@ const [profile, cv] = await Promise.all([getProfile(locale), getCv(locale)]);
 >
   <PageHeader title={t.title} path="~/about" />
 
-  <div class="grid items-start gap-10 md:grid-cols-[16rem_1fr] lg:gap-16">
+  <div data-reveal class="grid items-start gap-10 md:grid-cols-[16rem_1fr] lg:gap-16">
     {profile.photo ? (
       <Image
         src={profile.photo}
         alt={profile.photoAlt ?? ''}
-        widths={[256, 512]}
+        widths={[256, Math.min(512, profile.photo.width)]}
         sizes="16rem"
         loading="eager"
         class="aspect-square w-48 rounded-(--radius-card) border border-border object-cover md:w-64"
@@ -63,7 +63,7 @@ const [profile, cv] = await Promise.all([getProfile(locale), getCv(locale)]);
     <SectionHeading index="01" title={t.interests} id="interests-title" />
     <ul class="grid gap-4 md:grid-cols-3">
       {profile.interests.map((interest) => (
-        <li class="rounded-(--radius-card) border border-border bg-surface p-6">
+        <li data-reveal class="rounded-(--radius-card) border border-border bg-surface p-6">
           <h3 class="font-semibold">{interest.title}</h3>
           <p class="mt-2 text-sm text-muted">{interest.description}</p>
         </li>

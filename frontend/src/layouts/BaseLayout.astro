@@ -31,10 +31,12 @@ const profile = await getProfile(locale);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--
-      Runs before first paint to avoid a flash of the wrong theme. Must stay inline and
-      tiny; the full logic lives in src/scripts/theme-toggle.ts.
+      Runs before first paint to avoid a flash of the wrong theme, and flags JavaScript
+      support so that scroll-revealed content starts hidden only when a script can reveal
+      it. Must stay inline and tiny; the full logic lives in src/scripts/.
     -->
     <script is:inline define:vars={{ storageKey: THEME_STORAGE_KEY }}>
+      document.documentElement.classList.add('js');
       try {
         const stored = localStorage.getItem(storageKey);
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -74,5 +76,8 @@ const profile = await getProfile(locale);
       <slot />
     </main>
     <Footer locale={locale} siteName={profile.name} links={profile.links} />
+    <script>
+      import '../scripts/reveal';
+    </script>
   </body>
 </html>
