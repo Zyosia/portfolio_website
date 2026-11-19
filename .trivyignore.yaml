@@ -1,11 +1,4 @@
 # Accepted vulnerability findings. Every entry needs a justification and an expiry date,
 # after which Trivy reports it again and the decision must be revisited.
-vulnerabilities:
-  - id: CVE-2026-78661
-    paths:
-      - usr/bin/caddy
-    statement: >-
-      DoS in golang.org/x/net/html, compiled into Caddy 2.11.9 (latest release at the time).
-      The HTML parser is only reachable through Caddy's `templates` handler, which our
-      Caddyfile does not enable. Remove once a Caddy release ships x/net >= 0.62.0.
-    expired_at: 2027-01-31
+# Prefer fixing over ignoring: Caddy is rebuilt with patched modules in frontend/Dockerfile.
+vulnerabilities: []
