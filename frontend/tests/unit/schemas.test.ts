@@ -17,6 +17,7 @@ const validProject = {
   date: '2026-06-01',
   tags: ['AI'],
   techStack: ['Python'],
+  collaboration: 'personal',
   cover: './cover.png',
   coverAlt: 'Screenshot of the dashboard',
 };
@@ -36,6 +37,8 @@ describe('projectSchema', () => {
     ['invalid date', { date: 'yesterday' }],
     ['summary too short', { summary: 'Too short' }],
     ['blank alt text', { coverAlt: '   ' }],
+    ['unknown collaboration', { collaboration: 'solo' }],
+    ['missing collaboration', { collaboration: undefined }],
   ])('rejects %s', (_label, override) => {
     expect(project.safeParse({ ...validProject, ...override }).success).toBe(false);
   });

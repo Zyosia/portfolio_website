@@ -18,8 +18,18 @@ interface Props {
 const { project } = Astro.props;
 const { locale, slug } = project;
 const t = ui(locale).projects;
-const { title, summary, date, tags, techStack, cover, coverAlt, repositoryUrl, demoUrl } =
-  project.data;
+const {
+  title,
+  summary,
+  date,
+  tags,
+  techStack,
+  collaboration,
+  cover,
+  coverAlt,
+  repositoryUrl,
+  demoUrl,
+} = project.data;
 const { Content } = await render(project);
 ---
 
@@ -28,6 +38,7 @@ const { Content } = await render(project);
     <PageHeader title={title} path={`~/projects/${slug}`} lead={summary}>
       <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-sm text-muted">
         <time datetime={date.toISOString()}>{formatMonthYear(date, locale)}</time>
+        <span>{t.collaboration[collaboration]}</span>
         <TagList tags={tags} label={t.tags} />
       </div>
       {(repositoryUrl ?? demoUrl) && (

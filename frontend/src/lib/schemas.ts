@@ -52,6 +52,8 @@ export const projectSchema = (image: ImageFunction) =>
     date: z.coerce.date(),
     tags: z.array(nonEmpty).min(1),
     techStack: z.array(nonEmpty).min(1),
+    /** Solo or team work: recruiters read the two very differently. */
+    collaboration: z.enum(['personal', 'team']),
     cover: image(),
     coverAlt: nonEmpty,
     repositoryUrl: z.url().optional(),

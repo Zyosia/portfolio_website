@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { project, headingLevel: Heading = 'h3', eager = false } = Astro.props;
-const { title, summary, date, tags, cover, coverAlt, draft } = project.data;
+const { title, summary, date, tags, cover, coverAlt, draft, collaboration } = project.data;
 const { locale, slug } = project;
 const t = ui(locale).projects;
 const href = localizePath(`/projects/${slug}`, locale);
@@ -34,6 +34,8 @@ const href = localizePath(`/projects/${slug}`, locale);
   <div class="flex flex-1 flex-col gap-3 p-5">
     <p class="font-mono text-xs text-muted">
       <time datetime={date.toISOString()}>{formatMonthYear(date, locale)}</time>
+      <span aria-hidden="true"> · </span>
+      {t.collaboration[collaboration]}
       {draft && <span class="ml-2 text-danger">{t.draft}</span>}
     </p>
     <Heading class="text-lg leading-snug font-semibold">

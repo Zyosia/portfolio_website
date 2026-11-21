@@ -50,6 +50,7 @@ const en = {
     liveDemo: 'Live demo',
     sourceCode: 'Source code',
     techStack: 'Tech stack',
+    collaboration: { personal: 'Personal project', team: 'Team project' },
     backToAll: 'All projects',
   },
   about: {
@@ -147,6 +148,7 @@ const fr: UiStrings = {
     liveDemo: 'Démo en ligne',
     sourceCode: 'Code source',
     techStack: 'Technologies',
+    collaboration: { personal: 'Projet personnel', team: 'Projet de groupe' },
     backToAll: 'Tous les projets',
   },
   about: {

@@ -4,6 +4,7 @@ summary: A Java application for managing a restaurant's reservations, designed w
 date: 2022-06-01
 tags: [Java, Software design]
 techStack: [Java, Swing, UML]
+collaboration: team
 # TODO(content): replace with a screenshot of the application.
 cover: ../../../assets/projects/restaurant-booking-app.svg
 coverAlt: Cover illustration with the project name and its stack
@@ -13,7 +14,7 @@ draft: false
 
 ## Overview
 
-In June 2022, I designed and developed a Java application to manage restaurant reservations.
+In June 2022, in a team project, I designed and developed a Java application to manage restaurant reservations.
 
 ## What I built
 
