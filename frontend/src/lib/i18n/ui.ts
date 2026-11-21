@@ -8,6 +8,7 @@ import type { Locale } from './locales';
 
 const en = {
   skipToContent: 'Skip to content',
+  breadcrumb: 'Breadcrumb',
   nav: {
     label: 'Main',
     menu: 'Menu',
@@ -50,6 +51,7 @@ const en = {
     liveDemo: 'Live demo',
     sourceCode: 'Source code',
     techStack: 'Tech stack',
+    collaboration: { personal: 'Personal project', team: 'Team project' },
     backToAll: 'All projects',
   },
   about: {
@@ -105,6 +107,7 @@ export type UiStrings = typeof en;
 
 const fr: UiStrings = {
   skipToContent: 'Aller au contenu',
+  breadcrumb: 'Fil d’Ariane',
   nav: {
     label: 'Principale',
     menu: 'Menu',
@@ -147,6 +150,7 @@ const fr: UiStrings = {
     liveDemo: 'Démo en ligne',
     sourceCode: 'Code source',
     techStack: 'Technologies',
+    collaboration: { personal: 'Projet personnel', team: 'Projet de groupe' },
     backToAll: 'Tous les projets',
   },
   about: {

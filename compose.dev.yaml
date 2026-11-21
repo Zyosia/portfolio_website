@@ -22,6 +22,13 @@ services:
     sysctls: !reset {}
     depends_on: !override
       - api
+    # The production limits fit Caddy serving static files; the Astro/Vite dev server
+    # (file watching, image processing) gets OOM-killed (exit 137) under 256M.
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
 
   api:
     image: portfolio-api:dev
@@ -44,6 +51,12 @@ services:
     volumes:
       - ./backend/app:/app/app
     read_only: false
+    # Auto-reload runs a watcher process next to the server.
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
     depends_on:
       - mailpit
 

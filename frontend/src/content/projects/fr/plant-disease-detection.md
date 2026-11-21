@@ -4,6 +4,7 @@ summary: Un système de classification d’images qui détecte des maladies vég
 date: 2024-06-01
 tags: [IA, Vision par ordinateur, Python]
 techStack: [Python, PyTorch, TensorFlow, Keras]
+collaboration: team
 # TODO(content): remplacer par des exemples de prédictions ou un graphique de résultats.
 cover: ../../../assets/projects/plant-disease-detection.svg
 coverAlt: Illustration de couverture avec le nom du projet et ses technologies
@@ -13,7 +14,7 @@ draft: false
 
 ## Présentation
 
-D’avril à juin 2024, j’ai développé un système de classification d’images pour détecter des
+D’avril à juin 2024, dans le cadre d’un projet de groupe, j’ai développé un système de classification d’images pour détecter des
 maladies végétales.
 
 ## Réalisations

@@ -127,6 +127,7 @@ summary: One or two sentences (20 to 200 characters) shown on cards and as descr
 date: 2026-06-01
 tags: [AI, Python]
 techStack: [FastAPI, PostgreSQL]
+collaboration: personal   # or team: shown on cards and project pages
 cover: ../../assets/projects/my-project.png
 coverAlt: Screenshot of the dashboard
 repositoryUrl: https://github.com/you/my-project   # optional

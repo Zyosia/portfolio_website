@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4321;
+// Not 4321: a running dev server (`make dev`) would be reused instead of the production build.
+const PORT = 4322;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 const isCI = Boolean(process.env.CI);
 

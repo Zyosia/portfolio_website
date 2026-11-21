@@ -14,7 +14,7 @@ const t = ui(locale).notFound;
 ---
 
 <BaseLayout locale={locale} title={t.title} noindex>
-  <PageHeader title={t.heading} path="~/nowhere" lead={t.lead} />
+  <PageHeader title={t.heading} path="/nowhere" locale={locale} lead={t.lead} />
   <pre
     class="max-w-(--container-prose) overflow-x-auto rounded-(--radius-card) border border-border bg-surface-muted p-4 font-mono text-sm text-muted"
     aria-hidden="true"

@@ -63,6 +63,22 @@ test.describe('navigation', () => {
     }
   });
 
+  test('breadcrumb links back to each parent folder and home', async ({ page }) => {
+    await page.goto('/en/projects/portfolio-website');
+    const breadcrumb = page.getByRole('navigation', { name: 'Breadcrumb' });
+    await expect(breadcrumb).toContainText('$ cd ~/home/projects/portfolio-website');
+    await expect(breadcrumb.locator('[aria-current="page"]')).toHaveText('portfolio-website');
+
+    await breadcrumb.getByRole('link', { name: 'projects', exact: true }).click();
+    await expect(page).toHaveURL(/\/en\/projects$/);
+
+    await page
+      .getByRole('navigation', { name: 'Breadcrumb' })
+      .getByRole('link', { name: '~/home' })
+      .click();
+    await expect(page).toHaveURL(/\/en$/);
+  });
+
   test('skip link moves focus to the main content', async ({ page, isMobile }) => {
     test.skip(isMobile, 'Keyboard navigation is a desktop concern.');
     await page.goto('/en');

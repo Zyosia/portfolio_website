@@ -4,6 +4,7 @@ summary: Une application Java de gestion des réservations d’un restaurant, mo
 date: 2022-06-01
 tags: [Java, Conception logicielle]
 techStack: [Java, Swing, UML]
+collaboration: team
 # TODO(content): remplacer par une capture d’écran de l’application.
 cover: ../../../assets/projects/restaurant-booking-app.svg
 coverAlt: Illustration de couverture avec le nom du projet et ses technologies
@@ -13,7 +14,7 @@ draft: false
 
 ## Présentation
 
-En juin 2022, j’ai conçu et développé une application Java de gestion de réservations pour un
+En juin 2022, dans le cadre d’un projet de groupe, j’ai conçu et développé une application Java de gestion de réservations pour un
 restaurant.
 
 ## Réalisations

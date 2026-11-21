@@ -4,6 +4,7 @@ summary: An image classification system that detects plant diseases, built in Py
 date: 2024-06-01
 tags: [AI, Computer Vision, Python]
 techStack: [Python, PyTorch, TensorFlow, Keras]
+collaboration: team
 # TODO(content): replace with sample predictions or a results chart.
 cover: ../../../assets/projects/plant-disease-detection.svg
 coverAlt: Cover illustration with the project name and its stack
@@ -13,7 +14,7 @@ draft: false
 
 ## Overview
 
-From April to June 2024, I developed an image classification system to detect plant diseases.
+From April to June 2024, in a team project, I developed an image classification system to detect plant diseases.
 
 ## What I built
 

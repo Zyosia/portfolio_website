@@ -77,8 +77,10 @@
    * Body text is justified; automatic hyphenation (driven by <html lang>) keeps the word
    * spacing even, especially in narrow columns and on phones. Single-line paragraphs are
    * unaffected: the last line of a justified block stays left-aligned.
+   * Items of text lists (Markdown bullets, CV highlights) count as body text too; other
+   * lists (tags, cards) are layout containers and keep their own alignment.
    */
-  main p {
+  main :where(p, .prose-content li, .list-disc > li, .list-decimal > li) {
     text-align: justify;
     hyphens: auto;
   }

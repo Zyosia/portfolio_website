@@ -25,7 +25,8 @@ install: ## Install frontend + backend dependencies and pre-commit hooks
 	cd $(FRONTEND) && pnpm exec playwright install chromium
 	cd $(BACKEND) && uv sync --frozen
 	uv tool install pre-commit
-	pre-commit install
+# Through uv: its tool directory is often missing from PATH (Windows especially).
+	uv tool run pre-commit install
 
 dev: ## Full stack with hot reload (Mailpit UI on http://localhost:8025)
 	$(COMPOSE_DEV) up --build
