@@ -8,6 +8,7 @@ import type { Locale } from './locales';
 
 const en = {
   skipToContent: 'Skip to content',
+  breadcrumb: 'Breadcrumb',
   nav: {
     label: 'Main',
     menu: 'Menu',
@@ -106,6 +107,7 @@ export type UiStrings = typeof en;
 
 const fr: UiStrings = {
   skipToContent: 'Aller au contenu',
+  breadcrumb: 'Fil d’Ariane',
   nav: {
     label: 'Principale',
     menu: 'Menu',

@@ -28,7 +28,12 @@ const otherPdfs = await Promise.all(
 ---
 
 <BaseLayout locale={locale} title={t.title} description={t.description(profile.name)}>
-  <PageHeader title={t.heading} path="~/cv" lead={`${profile.jobTitle} · ${profile.location}`}>
+  <PageHeader
+    title={t.heading}
+    path="/cv"
+    locale={locale}
+    lead={`${profile.jobTitle} · ${profile.location}`}
+  >
     <div class="mt-8 flex flex-wrap gap-3 print:hidden">
       <ButtonLink href={cv.pdf} download hreflang={locale}>
         {t.downloadPdf}

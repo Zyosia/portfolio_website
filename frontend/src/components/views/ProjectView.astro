@@ -35,7 +35,7 @@ const { Content } = await render(project);
 
 <BaseLayout locale={locale} title={title} description={summary} ogType="article">
   <article>
-    <PageHeader title={title} path={`~/projects/${slug}`} lead={summary}>
+    <PageHeader title={title} path={`/projects/${slug}`} locale={locale} lead={summary}>
       <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-sm text-muted">
         <time datetime={date.toISOString()}>{formatMonthYear(date, locale)}</time>
         <span>{t.collaboration[collaboration]}</span>

@@ -14,19 +14,23 @@ draft: false
 
 ## Overview
 
-The site you are reading, designed, built and deployed from A to Z. It is meant to be evidence
-of the practices it describes: typed code, tests, hardened containers, automated delivery and
-documented decisions.
+I designed, built and deployed this site end to end. It also doubles as a concrete
+demonstration of the practices behind it: typed and tested code, secured containers, automated
+deployment and documented technical decisions.
 
 ## What I built
 
-- **Frontend**: static Astro site, bilingual (French / English), accessible (automated axe
-  checks) and fast (Lighthouse 99–100).
-- **Backend**: FastAPI API for the contact form, with validation, honeypot, per-IP rate limiting
-  and email through a transactional provider. Organised by feature, ready for a future AI
-  chatbot.
-- **Infrastructure**: two containers on a VPS (non-root, read-only, health checks) behind Caddy:
-  automatic HTTPS, strict Content Security Policy, security headers.
-- **CI/CD**: lint, type checks, tests (99% backend coverage), Trivy and hadolint scans, images
-  pushed to GHCR, SSH deployment with a health check and one-command rollback.
-- **Documentation**: every architectural choice recorded as an ADR.
+- **Frontend**: a static Astro site, available in French and English. Its accessibility is
+  checked automatically with axe, and it scores between 99 and 100 on Lighthouse.
+- **Backend**: a FastAPI API handles the contact form. It validates the input, filters out bots
+  with a honeypot, limits the number of requests per IP and sends messages through a
+  transactional email service. The code is organised by feature, which will make it easy to add
+  an AI chatbot later on.
+- **Infrastructure**: the site runs in two containers on a VPS. They run without root
+  privileges, on a read-only filesystem, with health checks. Caddy sits in front of them and
+  handles automatic HTTPS, a strict Content Security Policy and the security headers.
+- **CI/CD**: on every change, the pipeline runs linting, type checks and tests (99% backend
+  coverage), then scans the images with Trivy and hadolint. The images are published to GHCR
+  and deployed over SSH. A health check follows every deployment, and rolling back to the
+  previous version takes a single command.
+- **Documentation**: every architectural decision is explained in an ADR.

@@ -1,19 +1,42 @@
 ---
+import { buildBreadcrumb } from '../lib/breadcrumb';
+import { localizePath, type Locale } from '../lib/i18n/locales';
+import { ui } from '../lib/i18n/ui';
+
 interface Props {
   title: string;
-  /** Terminal-style breadcrumb shown above the title, e.g. `~/projects`. */
+  /** Locale-independent path of the page, e.g. `/projects/my-app`: drives the breadcrumb. */
   path: string;
+  locale: Locale;
   lead?: string | undefined;
 }
 
-const { title, path, lead } = Astro.props;
+const { title, path, locale, lead } = Astro.props;
+const crumbs = buildBreadcrumb(path);
 ---
 
 <header data-reveal class="pt-12 pb-10 sm:pt-16">
-  <p class="font-mono text-sm text-accent">
+  <!-- Rendered as a shell command (`$ cd ~/home/projects`), but each folder is a link. -->
+  <nav aria-label={ui(locale).breadcrumb} class="font-mono text-sm text-accent">
     <span aria-hidden="true">$ cd </span>
-    {path}
-  </p>
+    <ol class="inline">
+      {crumbs.map((crumb, index) => (
+        <li class="inline">
+          {index > 0 && <span aria-hidden="true">/</span>}
+          {crumb.path === undefined ? (
+            <span aria-current="page">{crumb.label}</span>
+          ) : (
+            <a
+              href={localizePath(crumb.path, locale)}
+              class="underline-offset-4 hover:text-fg hover:underline"
+            >
+              {crumb.label}
+            </a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
   <h1 class="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl">{title}</h1>
   {lead && <p class="mt-4 max-w-(--container-prose) text-lg text-muted">{lead}</p>}
   <slot />
